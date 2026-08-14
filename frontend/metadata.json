@@ -1,0 +1,6 @@
+{
+  "name": "Universitas Ichsan Satya",
+  "description": "Website Resmi Universitas Ichsan Satya (UIS) - Perguruan Tinggi Kesehatan & Teknologi unggulan di Bintaro, Tangerang Selatan.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

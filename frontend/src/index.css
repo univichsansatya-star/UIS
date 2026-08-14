@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+@theme {
+  --color-sky-cyan: #00ADF1;
+  --color-uis-navy: #17356B;
+  --color-uis-red: #D9232C;
+  --color-uis-ink: #0F1C2E;
+  --color-uis-paper: #F6F9FB;
+  --color-uis-teal: #0E7C86;
+
+  --font-display: "Fraunces", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+  }
+  .font-mono-code {
+    font-family: var(--font-mono);
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F6F9FB;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #00ADF1;
+}
+
+/* Book Motif Signature Elements */
+.book-spine-divider {
+  position: relative;
+}
+.book-spine-divider::after {
+  content: '';
+  position: absolute;
+  top: 10%;
+  bottom: 10%;
+  right: -1px;
+  width: 2px;
+  background: linear-gradient(180deg, rgba(0, 173, 241, 0.1) 0%, rgba(23, 53, 107, 0.3) 50%, rgba(0, 173, 241, 0.1) 100%);
+  border-radius: 2px;
+}
+
