@@ -91,7 +91,7 @@ fi
 
 # Run migrations
 echo "  Running database migrations..."
-python manage.py migrate -q
+python manage.py migrate
 echo -e "${GREEN}  ✓ Migrations completed${NC}\n"
 
 # ==========================================

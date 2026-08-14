@@ -1,0 +1,8 @@
+# Buka Terminal 1 backend
+cd /home/gibran/Documents/Project/UIS/backend
+source venv/bin/activate
+python manage.py runserver 0.0.0.0:8000
+
+# Buka Terminal 2 (baru) frontend
+cd /home/gibran/Documents/Project/UIS/frontend
+npm run dev
