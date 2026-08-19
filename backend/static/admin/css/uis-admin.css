@@ -222,8 +222,32 @@ input:focus, textarea:focus, select:focus, .vTextField:focus {
 
 /* Dashboard workspace */
 .dashboard #content {
-  max-width: 1500px;
+  box-sizing: border-box;
+  max-width: 1600px;
+  width: 100%;
   padding-top: 28px;
+}
+
+.dashboard #content-main {
+  box-sizing: border-box;
+  float: none;
+  margin: 0;
+  max-width: none;
+  width: 100%;
+}
+
+.dashboard .uis-dashboard {
+  box-sizing: border-box;
+  max-width: 1500px;
+  width: 100%;
+}
+
+.dashboard .uis-welcome-panel,
+.dashboard .uis-stat-grid,
+.dashboard .uis-chart-grid,
+.dashboard .uis-quick-actions,
+.dashboard .uis-dashboard-columns {
+  width: 100%;
 }
 
 .uis-dashboard {
