@@ -1,0 +1,16 @@
+{% extends "admin/change_list.html" %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs"><a href="{% url 'admin:index' %}">Dashboard</a> &rsaquo; <a href="{% url 'admin:app_list' app_label='academics' %}">Academics</a> &rsaquo; Program Studi</div>
+{% endblock %}
+
+{% block content %}
+<div class="academics-shell">
+  <section class="academics-hero">
+    <div><span class="uis-eyebrow">ACADEMICS / PROGRAMS</span><h1>Program Studi</h1><p>Kelola program studi, jenjang pendidikan, akreditasi, dan kaprodi.</p></div>
+    <div class="academics-hero-stat"><strong>{{ cl.result_count }}</strong><span>program terdaftar</span></div>
+  </section>
+  <nav class="academics-tabs"><a href="{% url 'admin:academics_faculty_changelist' %}">Fakultas</a><a class="is-active" href="{% url 'admin:academics_studyprogram_changelist' %}">Program Studi</a><a href="{% url 'admin:academics_accreditation_changelist' %}">Akreditasi</a></nav>
+  {{ block.super }}
+</div>
+{% endblock %}

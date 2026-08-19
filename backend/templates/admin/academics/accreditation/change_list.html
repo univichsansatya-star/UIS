@@ -1,0 +1,16 @@
+{% extends "admin/change_list.html" %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs"><a href="{% url 'admin:index' %}">Dashboard</a> &rsaquo; <a href="{% url 'admin:app_list' app_label='academics' %}">Academics</a> &rsaquo; Akreditasi</div>
+{% endblock %}
+
+{% block content %}
+<div class="academics-shell">
+  <section class="academics-hero">
+    <div><span class="uis-eyebrow">ACADEMICS / QUALITY</span><h1>Akreditasi</h1><p>Pantau status mutu institusi dan program studi Universitas Ichsan Satya.</p></div>
+    <div class="academics-hero-stat"><strong>{{ cl.result_count }}</strong><span>rekam akreditasi</span></div>
+  </section>
+  <nav class="academics-tabs"><a href="{% url 'admin:academics_faculty_changelist' %}">Fakultas</a><a href="{% url 'admin:academics_studyprogram_changelist' %}">Program Studi</a><a class="is-active" href="{% url 'admin:academics_accreditation_changelist' %}">Akreditasi</a></nav>
+  {{ block.super }}
+</div>
+{% endblock %}
