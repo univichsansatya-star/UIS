@@ -1,9 +1,12 @@
 // News API
 const API_BASE_URL = 'http://localhost:8000/api';
 
-export async function getNewsList(page = 1) {
+export async function getNewsList(category?: string, search?: string) {
   try {
-    const response = await fetch(`${API_BASE_URL}/news/?page=${page}`);
+    const params = new URLSearchParams();
+    if (category) params.set('category', category);
+    if (search) params.set('search', search);
+    const response = await fetch(`${API_BASE_URL}/news/?${params.toString()}`);
     if (!response.ok) throw new Error(`API error: ${response.status}`);
     return await response.json();
   } catch (error) {

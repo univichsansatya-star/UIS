@@ -116,7 +116,7 @@ if (-not (Test-Path ".env")) {
 
 # Run migrations
 Write-Host "  Running database migrations..."
-python manage.py migrate -q
+python manage.py migrate
 
 if ($LASTEXITCODE -ne 0) {
     Write-Host "${RED}  ❌ Migration failed${NC}"

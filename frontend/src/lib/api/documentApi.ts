@@ -1,9 +1,10 @@
 // Document API
 const API_BASE_URL = 'http://localhost:8000/api';
 
-export async function getDocuments() {
+export async function getDocuments(category?: string) {
   try {
-    const response = await fetch(`${API_BASE_URL}/documents/`);
+    const query = category ? `?category=${encodeURIComponent(category)}` : '';
+    const response = await fetch(`${API_BASE_URL}/documents/${query}`);
     if (!response.ok) throw new Error(`API error: ${response.status}`);
     return await response.json();
   } catch (error) {

@@ -58,7 +58,7 @@ for /f "tokens=*" %%i in ('node --version') do set NODE_VERSION=%%i
 echo OK: Node.js !NODE_VERSION!
 
 REM Check npm
-npm --version >nul 2>&1
+call npm --version >nul 2>&1
 if errorlevel 1 (
     echo.
     echo ERROR: npm not found!
@@ -129,7 +129,7 @@ if not exist ".env" (
 
 REM Run migrations
 echo   Running database migrations...
-python manage.py migrate -q
+python manage.py migrate
 if errorlevel 1 (
     echo.
     echo ERROR: Migration failed

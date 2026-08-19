@@ -1,76 +1,108 @@
 // Mock data for development
 // Replace with real API calls in production
+import type {Faculty, StudyProgram} from '../../types';
 
 export const mockContactInfo = {
   email: 'info@universitasichsansatya.ac.id',
   phone: '+62-123-456-789',
+  phone1: '+62-123-456-789',
+  phone2: '+62-812-3456-7890',
+  whatsapp: '+6281234567890',
   address: 'Jl. Pendidikan No. 1, Kampus UIS, Kota Bandung',
   operatingHours: 'Senin - Jumat: 08:00 - 17:00 WIB',
+  operationalHours: 'Senin - Jumat: 08:00 - 17:00 WIB',
+  socialMedia: {
+    instagram: 'https://www.instagram.com/',
+    facebook: 'https://www.facebook.com/',
+    youtube: 'https://www.youtube.com/',
+  },
+  googleMapsEmbedUrl: 'https://www.google.com/maps?q=Universitas+Ichsan+Satya&output=embed',
 };
 
-export const mockStudyPrograms = [
+export const mockStudyPrograms: StudyProgram[] = [
   {
     id: 1,
     name: 'Teknik Informatika',
     slug: 'teknik-informatika',
     facultyId: 1,
-    description: 'Program studi terbaik untuk mengembangkan karir di bidang teknologi',
+    degree: 'S1',
+    content: 'Program studi yang memadukan dasar ilmu komputer dengan praktik pengembangan teknologi.',
+    durationYears: 4,
+    careerOutlooks: ['Software Engineer', 'System Analyst'],
+    headOfProgram: 'Dr. Budi Santoso',
     accreditation: 'A',
-    students: 150,
   },
   {
     id: 2,
     name: 'Sistem Informasi',
     slug: 'sistem-informasi',
     facultyId: 1,
-    description: 'Fokus pada pengembangan sistem informasi untuk bisnis',
+    degree: 'S1',
+    content: 'Program studi yang berfokus pada analisis dan pengembangan sistem informasi organisasi.',
+    durationYears: 4,
+    careerOutlooks: ['Business Analyst', 'System Analyst'],
+    headOfProgram: 'Dr. Siti Rahma',
     accreditation: 'A',
-    students: 120,
   },
   {
     id: 3,
     name: 'Manajemen',
     slug: 'manajemen',
     facultyId: 2,
-    description: 'Persiapan menjadi pemimpin bisnis profesional',
+    degree: 'S1',
+    content: 'Program studi untuk membangun kompetensi manajemen dan kepemimpinan bisnis.',
+    durationYears: 4,
+    careerOutlooks: ['Business Manager', 'Entrepreneur'],
+    headOfProgram: 'Dr. Rudi Hartono',
     accreditation: 'A',
-    students: 200,
   },
   {
     id: 4,
     name: 'Akuntansi',
     slug: 'akuntansi',
     facultyId: 2,
-    description: 'Program keahlian akuntansi dan keuangan',
+    degree: 'S1',
+    content: 'Program studi dengan landasan akuntansi, audit, dan pengelolaan keuangan.',
+    durationYears: 4,
+    careerOutlooks: ['Accountant', 'Financial Analyst'],
+    headOfProgram: 'Dr. Lina Permata',
     accreditation: 'A',
-    students: 180,
   },
 ];
 
-export const mockFaculties = [
+export const mockFaculties: Faculty[] = [
   {
     id: 1,
     name: 'Fakultas Teknologi Informasi',
+    slug: 'fakultas-teknologi-informasi',
     description: 'Fakultas yang menyelenggarakan program studi di bidang teknologi',
+    deanName: 'Dr. Budi Santoso',
+    image: 'https://via.placeholder.com/800x500?text=Fakultas+Teknologi+Informasi',
+    programs: mockStudyPrograms.filter((program) => program.facultyId === 1),
   },
   {
     id: 2,
     name: 'Fakultas Ekonomi Bisnis',
+    slug: 'fakultas-ekonomi-bisnis',
     description: 'Fakultas yang menyelenggarakan program studi di bidang bisnis',
+    deanName: 'Dr. Lina Permata',
+    image: 'https://via.placeholder.com/800x500?text=Fakultas+Ekonomi+Bisnis',
+    programs: mockStudyPrograms.filter((program) => program.facultyId === 2),
   },
 ];
 
-export const mockRectorGreeting = `
-Assalamu'alaikum Warahmatullahi Wabarakatuh,
-
-Selamat datang di Universitas Ichsan Satya. Kami berkomitmen untuk memberikan pendidikan berkualitas
-yang mengintegrasikan nilai-nilai islami dengan perkembangan teknologi terkini.
-
-Dengan didukung oleh dosen-dosen profesional dan fasilitas pembelajaran modern, kami yakin dapat
-mempersiapkan mahasiswa menjadi sumber daya manusia yang kompeten dan berakhlak mulia.
-
-Wassalamu'alaikum Warahmatullahi Wabarakatuh.
-`;
+export const mockRectorGreeting = {
+  photo: 'https://via.placeholder.com/500x600?text=Rektor+UIS',
+  name: 'Dr. Ichsan Satya',
+  title: 'Rektor Universitas Ichsan Satya',
+  quote: 'Membangun generasi unggul dengan ilmu, karakter, dan kepedulian.',
+  fullMessage: [
+    "Assalamu'alaikum Warahmatullahi Wabarakatuh,",
+    'Selamat datang di Universitas Ichsan Satya. Kami berkomitmen untuk memberikan pendidikan berkualitas yang mengintegrasikan nilai-nilai islami dengan perkembangan teknologi terkini.',
+    'Dengan didukung oleh dosen-dosen profesional dan fasilitas pembelajaran modern, kami yakin dapat mempersiapkan mahasiswa menjadi sumber daya manusia yang kompeten dan berakhlak mulia.',
+    "Wassalamu'alaikum Warahmatullahi Wabarakatuh.",
+  ],
+};
 
 export const mockCampusStats = [
   { label: 'Mahasiswa Aktif', value: 1250, icon: '👥' },
@@ -80,9 +112,11 @@ export const mockCampusStats = [
 ];
 
 export const mockPopupAnnouncement = {
+  isActive: false,
   title: 'Pengumuman Penting',
-  content: 'Pendaftaran mahasiswa baru tahun akademik 2024/2025 sudah dibuka. Daftarkan diri Anda sekarang!',
-  buttonText: 'Daftar Sekarang',
+  description: 'Pendaftaran mahasiswa baru tahun akademik 2024/2025 sudah dibuka. Daftarkan diri Anda sekarang!',
+  ctaText: 'Daftar Sekarang',
+  ctaLink: '/pmb',
   image: 'https://via.placeholder.com/400x300',
 };
 
@@ -95,6 +129,11 @@ export const mockNews = [
     image: 'https://via.placeholder.com/600x400',
     date: new Date('2024-09-15'),
     category: 'Akademik',
+    slug: 'wisuda-gelombang-1-2024',
+    coverImage: 'https://via.placeholder.com/600x400',
+    publishedAt: '2024-09-15',
+    author: 'Humas UIS',
+    summary: 'Acara wisuda mahasiswa angkatan 2020 akan dilaksanakan pada bulan Oktober 2024',
   },
   {
     id: 2,
@@ -104,6 +143,11 @@ export const mockNews = [
     image: 'https://via.placeholder.com/600x400',
     date: new Date('2024-08-20'),
     category: 'Beasiswa',
+    slug: 'program-magang-internasional',
+    coverImage: 'https://via.placeholder.com/600x400',
+    publishedAt: '2024-08-20',
+    author: 'Humas UIS',
+    summary: 'UIS membuka kesempatan magang bagi mahasiswa di universitas partner di luar negeri',
   },
 ];
 
@@ -131,6 +175,7 @@ export const mockHeroSlides = [
     description: 'Universitas dengan standar pendidikan internasional',
     image: 'https://via.placeholder.com/1600x600?text=UIS+Campus',
     ctaLink: '/profil',
+    ctaText: 'Kenali UIS',
   },
   {
     id: 2,
@@ -138,6 +183,7 @@ export const mockHeroSlides = [
     description: 'Pilih program studi sesuai minat dan bakat Anda',
     image: 'https://via.placeholder.com/1600x600?text=Akademik',
     ctaLink: '/akademik',
+    ctaText: 'Lihat Akademik',
   },
   {
     id: 3,
@@ -145,6 +191,7 @@ export const mockHeroSlides = [
     description: 'Berbagai beasiswa tersedia untuk mahasiswa berprestasi',
     image: 'https://via.placeholder.com/1600x600?text=Beasiswa',
     ctaLink: '/beasiswa',
+    ctaText: 'Lihat Beasiswa',
   },
 ];
 
@@ -156,6 +203,12 @@ export const mockTestimonials = [
     message: 'Pendidikan di UIS sangat membantu saya dalam mengembangkan karir di bidang teknologi',
     rating: 5,
     image: 'https://via.placeholder.com/100x100?text=Budi',
+    photo: 'https://via.placeholder.com/100x100?text=Budi',
+    quote: 'Pendidikan di UIS sangat membantu saya dalam mengembangkan karir di bidang teknologi',
+    programName: 'Teknik Informatika',
+    graduateYear: 2024,
+    currentJob: 'Software Engineer',
+    company: 'Teknologi Nusantara',
   },
   {
     id: 2,
@@ -164,6 +217,12 @@ export const mockTestimonials = [
     message: 'Dosen-dosen di UIS sangat profesional dan berpengalaman',
     rating: 5,
     image: 'https://via.placeholder.com/100x100?text=Siti',
+    photo: 'https://via.placeholder.com/100x100?text=Siti',
+    quote: 'Dosen-dosen di UIS sangat profesional dan berpengalaman',
+    programName: 'Manajemen',
+    graduateYear: 2024,
+    currentJob: 'Business Analyst',
+    company: 'Satya Group',
   },
   {
     id: 3,
@@ -172,6 +231,12 @@ export const mockTestimonials = [
     message: 'UIS memberikan pengalaman praktik yang sangat bermanfaat untuk dunia kerja',
     rating: 5,
     image: 'https://via.placeholder.com/100x100?text=Rudi',
+    photo: 'https://via.placeholder.com/100x100?text=Rudi',
+    quote: 'UIS memberikan pengalaman praktik yang sangat bermanfaat untuk dunia kerja',
+    programName: 'Akuntansi',
+    graduateYear: 2023,
+    currentJob: 'Financial Analyst',
+    company: 'Prima Konsultan',
   },
 ];
 
