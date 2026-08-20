@@ -39,11 +39,12 @@ Write-Host "${BLUE}========================================${NC}`n"
 Write-Host "${YELLOW}[1/5] Checking prerequisites...${NC}"
 
 # Check Python
-try {
+$python = Get-Command python -ErrorAction SilentlyContinue
+if ($python) {
     $python_version = python --version 2>&1
-    Write-Host "${GREEN}✓ Python found: $python_version${NC}"
-} catch {
-    Write-Host "${RED}❌ Python not found!${NC}"
+    Write-Host "${GREEN}[OK] Python found: $python_version${NC}"
+} else {
+    Write-Host "${RED}[ERROR] Python not found!${NC}"
     Write-Host "Please install Python 3.11+ from https://www.python.org/"
     Write-Host "Make sure to check 'Add Python to PATH' during installation`n"
     Read-Host "Press Enter to exit"
@@ -51,22 +52,24 @@ try {
 }
 
 # Check Node.js
-try {
+$node = Get-Command node -ErrorAction SilentlyContinue
+if ($node) {
     $node_version = node --version
-    Write-Host "${GREEN}✓ Node.js found: $node_version${NC}"
-} catch {
-    Write-Host "${RED}❌ Node.js not found!${NC}"
+    Write-Host "${GREEN}[OK] Node.js found: $node_version${NC}"
+} else {
+    Write-Host "${RED}[ERROR] Node.js not found!${NC}"
     Write-Host "Please install Node.js from https://nodejs.org/`n"
     Read-Host "Press Enter to exit"
     exit 1
 }
 
 # Check npm
-try {
+$npm = Get-Command npm -ErrorAction SilentlyContinue
+if ($npm) {
     $npm_version = npm --version
-    Write-Host "${GREEN}✓ npm found: $npm_version${NC}`n"
-} catch {
-    Write-Host "${RED}❌ npm not found!`n"
+    Write-Host "${GREEN}[OK] npm found: $npm_version${NC}`n"
+} else {
+    Write-Host "${RED}[ERROR] npm not found!`n"
     Read-Host "Press Enter to exit"
     exit 1
 }
@@ -83,13 +86,13 @@ Push-Location $BACKEND_DIR
 if (-not (Test-Path $VENV_DIR)) {
     Write-Host "  Creating virtual environment..."
     python -m venv venv
-    Write-Host "${GREEN}  ✓ Virtual environment created${NC}"
+    Write-Host "${GREEN}  [OK] Virtual environment created${NC}"
 }
 
 # Activate virtual environment
 & $VENV_ACTIVATE
 
-Write-Host "${GREEN}  ✓ Virtual environment activated${NC}"
+Write-Host "${GREEN}  [OK] Virtual environment activated${NC}"
 
 # Install dependencies
 Write-Host "  Installing Python dependencies..."
@@ -97,20 +100,20 @@ python -m pip install --upgrade pip | Out-Null
 pip install -q -r requirements.txt
 
 if ($LASTEXITCODE -ne 0) {
-    Write-Host "${RED}  ❌ Failed to install dependencies${NC}"
+    Write-Host "${RED}  [ERROR] Failed to install dependencies${NC}"
     Write-Host "  Check your internet connection and requirements.txt`n"
     Read-Host "Press Enter to exit"
     exit 1
 }
 
-Write-Host "${GREEN}  ✓ Python dependencies installed${NC}"
+Write-Host "${GREEN}  [OK] Python dependencies installed${NC}"
 
 # Check and create .env if needed
 if (-not (Test-Path ".env")) {
     Write-Host "  Creating .env file from .env.example..."
     if (Test-Path ".env.example") {
         Copy-Item ".env.example" ".env"
-        Write-Host "${YELLOW}  ⚠ .env created. Please update with your MySQL credentials!${NC}"
+        Write-Host "${YELLOW}  [WARNING] .env created. Please update with your MySQL credentials!${NC}"
     }
 }
 
@@ -119,13 +122,13 @@ Write-Host "  Running database migrations..."
 python manage.py migrate
 
 if ($LASTEXITCODE -ne 0) {
-    Write-Host "${RED}  ❌ Migration failed${NC}"
+    Write-Host "${RED}  [ERROR] Migration failed${NC}"
     Write-Host "  Make sure MySQL is running and database is configured in .env`n"
     Read-Host "Press Enter to exit"
     exit 1
 }
 
-Write-Host "${GREEN}  ✓ Migrations completed`n${NC}"
+Write-Host "${GREEN}  [OK] Migrations completed`n${NC}"
 
 Pop-Location
 
@@ -143,15 +146,15 @@ if (-not (Test-Path "node_modules")) {
     npm install -q
     
     if ($LASTEXITCODE -ne 0) {
-        Write-Host "${RED}  ❌ Failed to install npm dependencies${NC}"
+        Write-Host "${RED}  [ERROR] Failed to install npm dependencies${NC}"
         Write-Host "  Check your internet connection`n"
         Read-Host "Press Enter to exit"
         exit 1
     }
     
-    Write-Host "${GREEN}  ✓ npm dependencies installed${NC}"
+    Write-Host "${GREEN}  [OK] npm dependencies installed${NC}"
 } else {
-    Write-Host "${GREEN}  ✓ npm dependencies already installed${NC}"
+    Write-Host "${GREEN}  [OK] npm dependencies already installed${NC}"
 }
 
 Write-Host ""
@@ -163,7 +166,7 @@ Pop-Location
 # ==========================================
 
 Write-Host "${BLUE}========================================${NC}"
-Write-Host "${GREEN}  ✓ Setup Complete!${NC}"
+Write-Host "${GREEN}  [OK] Setup Complete!${NC}"
 Write-Host "${BLUE}========================================`n${NC}"
 
 Write-Host "${YELLOW}Starting services...`n${NC}"
