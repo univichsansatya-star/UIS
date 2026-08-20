@@ -151,7 +151,7 @@ cd /d "%FRONTEND_DIR%"
 
 REM Install npm dependencies if node_modules doesn't exist
 if not exist "node_modules" (
-    echo   Installing npm dependencies (this may take a few minutes)...
+    echo   Installing npm dependencies - this may take a few minutes...
     call npm install -q
     if errorlevel 1 (
         echo.
