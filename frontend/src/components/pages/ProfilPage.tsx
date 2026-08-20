@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { HeaderRunningMotif } from '../layout/HeaderRunningMotif';
 import { mockRectorGreeting, mockCampusStats } from '../../lib/api/mockData';
+import { getCampusStats, getRectorGreeting } from '../../lib/api/contentApi';
 import { BookOpen, Target, ShieldCheck, Users, Building, Sparkles, CheckCircle2, Award } from 'lucide-react';
 
 interface ProfilPageProps {
@@ -8,6 +9,14 @@ interface ProfilPageProps {
 }
 
 export const ProfilPage: React.FC<ProfilPageProps> = ({ onNavigate }) => {
+  const [rectorGreeting, setRectorGreeting] = useState(mockRectorGreeting);
+  const [campusStats, setCampusStats] = useState(mockCampusStats);
+
+  useEffect(() => {
+    getRectorGreeting().then(setRectorGreeting);
+    getCampusStats().then(setCampusStats);
+  }, []);
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-8 py-8 space-y-16">
       
@@ -20,6 +29,13 @@ export const ProfilPage: React.FC<ProfilPageProps> = ({ onNavigate }) => {
         <p className="text-gray-600 text-base max-w-3xl leading-relaxed">
           Mengenal lebih dekat institusi perguruan tinggi kesehatan dan teknologi di Bintaro yang berkomitmen melahirkan lulusan unggul berstandar internasional.
         </p>
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="bg-white rounded-2xl border border-gray-200 p-4"><strong className="block text-xl text-[#17356B]">{campusStats.studentsCount}</strong><span className="text-xs text-gray-500">Mahasiswa</span></div>
+        <div className="bg-white rounded-2xl border border-gray-200 p-4"><strong className="block text-xl text-[#17356B]">{campusStats.alumniCount}</strong><span className="text-xs text-gray-500">Alumni</span></div>
+        <div className="bg-white rounded-2xl border border-gray-200 p-4"><strong className="block text-xl text-[#17356B]">{campusStats.studyProgramsCount}</strong><span className="text-xs text-gray-500">Program studi</span></div>
+        <div className="bg-white rounded-2xl border border-gray-200 p-4"><strong className="block text-xl text-[#17356B]">{campusStats.employedRatePercentage}%</strong><span className="text-xs text-gray-500">Serapan kerja</span></div>
       </div>
 
       {/* 1. SEJARAH TRANSFORMASI */}
@@ -117,24 +133,24 @@ export const ProfilPage: React.FC<ProfilPageProps> = ({ onNavigate }) => {
         <div className="flex flex-col md:flex-row items-center gap-8">
           <div className="w-48 h-60 rounded-2xl overflow-hidden shadow-lg border-2 border-[#00ADF1] flex-shrink-0">
             <img 
-              src={mockRectorGreeting.photo} 
-              alt={mockRectorGreeting.name} 
+                src={rectorGreeting.photo} 
+                alt={rectorGreeting.name} 
               className="w-full h-full object-cover"
             />
           </div>
 
           <div className="space-y-4 flex-1">
             <span className="text-xs font-mono-code text-[#00ADF1] uppercase font-semibold">Sambutan Rektor</span>
-            <h2 className="font-display font-bold text-2xl sm:text-3xl text-[#17356B]">{mockRectorGreeting.name}</h2>
-            <p className="text-xs font-mono-code text-gray-500">{mockRectorGreeting.title}</p>
+            <h2 className="font-display font-bold text-2xl sm:text-3xl text-[#17356B]">{rectorGreeting.name}</h2>
+            <p className="text-xs font-mono-code text-gray-500">{rectorGreeting.title}</p>
             <blockquote className="italic text-gray-700 text-sm border-l-4 border-[#00ADF1] pl-3 py-1">
-              "{mockRectorGreeting.quote}"
+              "{rectorGreeting.quote}"
             </blockquote>
           </div>
         </div>
 
         <div className="space-y-4 text-sm text-gray-700 leading-relaxed border-t border-gray-100 pt-6">
-          {mockRectorGreeting.fullMessage.map((paragraph, index) => (
+          {rectorGreeting.fullMessage.map((paragraph, index) => (
             <p key={index}>{paragraph}</p>
           ))}
         </div>

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { HeaderRunningMotif } from '../layout/HeaderRunningMotif';
 import { mockFaculties, mockStudyPrograms } from '../../lib/api/mockData';
+import { getFaculties, getAllStudyPrograms } from '../../lib/api/facultyApi';
 import { StudyProgram } from '../../types';
 import { GraduationCap, Award, CheckCircle2, ArrowRight, BookOpen, Clock, UserCheck, ChevronRight, Sparkles } from 'lucide-react';
 
@@ -10,12 +11,24 @@ interface AkademikPageProps {
 }
 
 export const AkademikPage: React.FC<AkademikPageProps> = ({ onNavigate, selectedProdiSlug }) => {
+  const [faculties, setFaculties] = useState(mockFaculties);
+  const [studyPrograms, setStudyPrograms] = useState(mockStudyPrograms);
   const [selectedProdi, setSelectedProdi] = useState<StudyProgram | null>(() => {
     if (selectedProdiSlug) {
       return mockStudyPrograms.find(p => p.slug === selectedProdiSlug) || null;
     }
     return null;
   });
+
+  useEffect(() => {
+    Promise.all([getFaculties(), getAllStudyPrograms()]).then(([facultyData, programData]) => {
+      setFaculties(facultyData);
+      setStudyPrograms(programData);
+      if (selectedProdiSlug) {
+        setSelectedProdi(programData.find((program) => program.slug === selectedProdiSlug) || null);
+      }
+    });
+  }, [selectedProdiSlug]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-8 py-8 space-y-12">
@@ -93,7 +106,7 @@ export const AkademikPage: React.FC<AkademikPageProps> = ({ onNavigate, selected
 
       {/* Faculty Sections */}
       <div className="space-y-12">
-        {mockFaculties.map((faculty) => (
+        {faculties.map((faculty) => (
           <div key={faculty.id} className="bg-white rounded-3xl p-8 border border-gray-200 shadow-sm space-y-6">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-gray-100 pb-6">
               <div>

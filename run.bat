@@ -201,7 +201,7 @@ echo.
 cd /d "%BACKEND_DIR%"
 call "%VENV_DIR%\Scripts\activate.bat"
 
-start "UIS Backend" cmd /k python manage.py runserver
+start "UIS Backend" cmd /k python manage.py runserver 0.0.0.0:8000
 
 REM Give backend time to start
 timeout /t 2 /nobreak >nul

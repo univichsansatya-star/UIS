@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django import forms
 from unfold.admin import ModelAdmin
 from .models import ContactInfo, CampusStats, RectorGreeting, HeroSlide, PopupAnnouncement
 
@@ -38,8 +39,23 @@ class RectorGreetingAdmin(UnfoldSingletonModelAdmin):
     )
 
 
+class HeroSlideAdminForm(forms.ModelForm):
+    image = forms.ImageField(
+        label='Image (1920 x 720 px)',
+        help_text=(
+            'Recommended: 1920 x 720 px (ratio 8:3), JPG or WebP. '
+            'Keep important text or logos in the center because the image uses object-cover on mobile.'
+        ),
+    )
+
+    class Meta:
+        model = HeroSlide
+        fields = '__all__'
+
+
 @admin.register(HeroSlide)
 class HeroSlideAdmin(ModelAdmin):
+    form = HeroSlideAdminForm
     list_display = ('title', 'order')
     list_editable = ('order',)
     ordering = ['order']

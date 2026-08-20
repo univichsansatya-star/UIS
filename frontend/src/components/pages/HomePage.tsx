@@ -3,12 +3,14 @@ import { HeaderRunningMotif } from '../layout/HeaderRunningMotif';
 import { 
   mockHeroSlides, 
   mockRectorGreeting, 
-  mockCampusStats, 
   mockFaculties, 
   mockNews, 
-  mockTestimonials,
-  mockAccreditations
+  mockTestimonials
 } from '../../lib/api/mockData';
+import { getHeroSlides, getRectorGreeting } from '../../lib/api/contentApi';
+import { getFaculties } from '../../lib/api/facultyApi';
+import { getNewsList } from '../../lib/api/newsApi';
+import { getTestimonials } from '../../lib/api/testimonialApi';
 import { 
   ArrowRight, ShieldCheck, GraduationCap, Award, Users, Play, 
   ChevronLeft, ChevronRight, CheckCircle2, Sparkles, Building,
@@ -20,18 +22,34 @@ interface HomePageProps {
 }
 
 export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
+  const [heroSlides, setHeroSlides] = useState(mockHeroSlides);
+  const [rectorGreeting, setRectorGreeting] = useState(mockRectorGreeting);
+  const [faculties, setFaculties] = useState(mockFaculties);
+  const [news, setNews] = useState(mockNews);
+  const [testimonials, setTestimonials] = useState(mockTestimonials);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [testimonialIndex, setTestimonialIndex] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % mockHeroSlides.length);
-    }, 6000);
-    return () => clearInterval(interval);
+    Promise.all([getHeroSlides(), getRectorGreeting(), getFaculties(), getNewsList(), getTestimonials()])
+      .then(([heroData, rectorData, facultyData, newsData, testimonialData]) => {
+        if (heroData.length) setHeroSlides(heroData);
+        if (rectorData) setRectorGreeting(rectorData);
+        if (facultyData.length) setFaculties(facultyData);
+        if (newsData.length) setNews(newsData);
+        if (testimonialData.length) setTestimonials(testimonialData);
+      });
   }, []);
 
-  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % mockHeroSlides.length);
-  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + mockHeroSlides.length) % mockHeroSlides.length);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, [heroSlides.length]);
+
+  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
 
   return (
     <div className="space-y-16 pt-6 pb-12">
@@ -40,23 +58,23 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       <section className="max-w-7xl mx-auto px-4 sm:px-8">
         <div className="relative rounded-2xl overflow-hidden shadow-xl border border-gray-200 bg-[#0F1C2E] group">
           <div 
-            onClick={() => onNavigate(mockHeroSlides[currentSlide].ctaLink)}
+            onClick={() => onNavigate(heroSlides[currentSlide].ctaLink)}
             className="relative w-full aspect-[16/7] sm:aspect-[16/6] md:aspect-[16/5.5] flex items-center justify-center cursor-pointer overflow-hidden"
           >
             <img 
               key={currentSlide}
-              src={mockHeroSlides[currentSlide].image} 
-              alt={mockHeroSlides[currentSlide].title} 
+              src={heroSlides[currentSlide].image}
+              alt={heroSlides[currentSlide].title} 
               className="w-full h-full object-cover transition-all duration-700 hover:scale-[1.01]"
             />
             {/* Subtle bottom gradient for button/indicator visibility */}
             <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/60 to-transparent flex items-end justify-between p-4 sm:p-6 pointer-events-none">
               <div className="hidden sm:flex items-center gap-2 pointer-events-auto">
                 <button 
-                  onClick={(e) => { e.stopPropagation(); onNavigate(mockHeroSlides[currentSlide].ctaLink); }}
+                  onClick={(e) => { e.stopPropagation(); onNavigate(heroSlides[currentSlide].ctaLink); }}
                   className="bg-[#D9232C] hover:bg-[#b81b23] text-white font-bold px-4 py-2 rounded-xl text-xs sm:text-sm inline-flex items-center gap-2 transition shadow-lg transform hover:scale-105"
                 >
-                  <span>{mockHeroSlides[currentSlide].ctaText}</span>
+                  <span>{heroSlides[currentSlide].ctaText}</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
@@ -81,7 +99,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
 
           {/* Indicators */}
           <div className="absolute bottom-4 right-6 flex items-center gap-2 z-10">
-            {mockHeroSlides.map((_, idx) => (
+            {heroSlides.map((_, idx) => (
               <button
                 key={idx}
                 onClick={(e) => { e.stopPropagation(); setCurrentSlide(idx); }}
@@ -101,13 +119,13 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
           <div className="lg:col-span-4 flex justify-center">
             <div className="relative w-64 h-80 sm:w-72 sm:h-96 rounded-2xl overflow-hidden shadow-xl border-4 border-[#00ADF1]/30">
               <img 
-                src={mockRectorGreeting.photo} 
-                alt={mockRectorGreeting.name} 
+                src={rectorGreeting.photo}
+                alt={rectorGreeting.name}
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#17356B] to-transparent p-4 text-white text-center">
-                <p className="font-bold text-sm">{mockRectorGreeting.name}</p>
-                <p className="text-[11px] text-[#00ADF1] font-mono-code mt-0.5">{mockRectorGreeting.title}</p>
+                <p className="font-bold text-sm">{rectorGreeting.name}</p>
+                <p className="text-[11px] text-[#00ADF1] font-mono-code mt-0.5">{rectorGreeting.title}</p>
               </div>
             </div>
           </div>
@@ -123,11 +141,11 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             </h2>
 
             <blockquote className="italic text-gray-700 text-base sm:text-lg border-l-4 border-[#00ADF1] pl-4 py-1">
-              "{mockRectorGreeting.quote}"
+              "{rectorGreeting.quote}"
             </blockquote>
 
             <p className="text-gray-600 text-sm leading-relaxed">
-              {mockRectorGreeting.fullMessage[0]}
+              {rectorGreeting.fullMessage[0]}
             </p>
 
             <div>
@@ -165,7 +183,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
 
         {/* Faculty Grid Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {mockFaculties.map((fac) => (
+          {faculties.map((fac) => (
             <div 
               key={fac.id}
               className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group"
@@ -243,7 +261,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {mockNews.slice(0, 3).map((item) => (
+          {news.slice(0, 3).map((item) => (
             <article 
               key={item.id}
               onClick={() => onNavigate('/berita', item.slug)}
@@ -308,24 +326,24 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             <div className="flex flex-col md:flex-row items-center gap-8">
               <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-2xl overflow-hidden border-4 border-[#00ADF1] flex-shrink-0 shadow-lg">
                 <img 
-                  src={mockTestimonials[testimonialIndex].photo} 
-                  alt={mockTestimonials[testimonialIndex].name} 
+                  src={testimonials[testimonialIndex].photo}
+                  alt={testimonials[testimonialIndex].name}
                   className="w-full h-full object-cover"
                 />
               </div>
 
               <div className="space-y-4 text-center md:text-left flex-1">
                 <blockquote className="italic text-base sm:text-lg text-gray-100 font-sans leading-relaxed">
-                  "{mockTestimonials[testimonialIndex].quote}"
+                  "{testimonials[testimonialIndex].quote}"
                 </blockquote>
 
                 <div>
-                  <h4 className="font-bold text-lg text-white">{mockTestimonials[testimonialIndex].name}</h4>
+                  <h4 className="font-bold text-lg text-white">{testimonials[testimonialIndex].name}</h4>
                   <p className="text-xs text-[#00ADF1] font-mono-code">
-                    Lulusan {mockTestimonials[testimonialIndex].programName} ({mockTestimonials[testimonialIndex].graduateYear})
+                    Lulusan {testimonials[testimonialIndex].programName} ({testimonials[testimonialIndex].graduateYear})
                   </p>
                   <p className="text-xs text-gray-300 font-semibold mt-1">
-                    {mockTestimonials[testimonialIndex].currentJob} — {mockTestimonials[testimonialIndex].company}
+                    {testimonials[testimonialIndex].currentJob} — {testimonials[testimonialIndex].company}
                   </p>
                 </div>
               </div>
@@ -334,14 +352,14 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             {/* Nav Arrows */}
             <div className="flex justify-center md:justify-end gap-3 pt-6 border-t border-white/10 mt-6">
               <button 
-                onClick={() => setTestimonialIndex((prev) => (prev - 1 + mockTestimonials.length) % mockTestimonials.length)}
+                onClick={() => setTestimonialIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length)}
                 className="w-10 h-10 rounded-full bg-white/10 hover:bg-[#00ADF1] text-white flex items-center justify-center transition focus:outline-none"
                 aria-label="Previous Testimonial"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
               <button 
-                onClick={() => setTestimonialIndex((prev) => (prev + 1) % mockTestimonials.length)}
+                onClick={() => setTestimonialIndex((prev) => (prev + 1) % testimonials.length)}
                 className="w-10 h-10 rounded-full bg-white/10 hover:bg-[#00ADF1] text-white flex items-center justify-center transition focus:outline-none"
                 aria-label="Next Testimonial"
               >

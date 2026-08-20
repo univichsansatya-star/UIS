@@ -1,12 +1,12 @@
 // Document API
-const API_BASE_URL = 'http://localhost:8000/api';
+import API_BASE_URL, { extractResults } from './apiConfig';
 
 export async function getDocuments(category?: string) {
   try {
     const query = category ? `?category=${encodeURIComponent(category)}` : '';
-    const response = await fetch(`${API_BASE_URL}/documents/${query}`);
+    const response = await fetch(`${API_BASE_URL}/download/files/${query}`);
     if (!response.ok) throw new Error(`API error: ${response.status}`);
-    return await response.json();
+    return extractResults(await response.json());
   } catch (error) {
     console.error('Error fetching documents:', error);
     return [];
@@ -15,9 +15,9 @@ export async function getDocuments(category?: string) {
 
 export async function getDocumentCategories() {
   try {
-    const response = await fetch(`${API_BASE_URL}/document-categories/`);
+    const response = await fetch(`${API_BASE_URL}/download/categories/`);
     if (!response.ok) throw new Error(`API error: ${response.status}`);
-    return await response.json();
+    return extractResults(await response.json());
   } catch (error) {
     console.error('Error fetching document categories:', error);
     return [];
@@ -26,9 +26,9 @@ export async function getDocumentCategories() {
 
 export async function getGuidelines() {
   try {
-    const response = await fetch(`${API_BASE_URL}/guidelines/`);
+    const response = await fetch(`${API_BASE_URL}/pedoman/`);
     if (!response.ok) throw new Error(`API error: ${response.status}`);
-    return await response.json();
+    return extractResults(await response.json());
   } catch (error) {
     console.error('Error fetching guidelines:', error);
     return [];

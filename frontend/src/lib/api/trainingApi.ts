@@ -1,11 +1,11 @@
 // Training API
-const API_BASE_URL = 'http://localhost:8000/api';
+import API_BASE_URL, { extractResults } from './apiConfig';
 
 export async function getTrainingList() {
   try {
-    const response = await fetch(`${API_BASE_URL}/training/`);
+    const response = await fetch(`${API_BASE_URL}/pelatihan/`);
     if (!response.ok) throw new Error(`API error: ${response.status}`);
-    return await response.json();
+    return extractResults(await response.json());
   } catch (error) {
     console.error('Error fetching training list:', error);
     return [];

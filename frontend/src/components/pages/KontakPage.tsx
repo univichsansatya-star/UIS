@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { HeaderRunningMotif } from '../layout/HeaderRunningMotif';
 import { mockContactInfo } from '../../lib/api/mockData';
+import { getContactInfo } from '../../lib/api/contentApi';
 import { MapPin, Phone, Mail, Clock, Send, Instagram, Facebook, Youtube, CheckCircle2 } from 'lucide-react';
 
 interface KontakPageProps {
@@ -8,8 +9,13 @@ interface KontakPageProps {
 }
 
 export const KontakPage: React.FC<KontakPageProps> = ({ onNavigate }) => {
+  const [contactInfo, setContactInfo] = useState(mockContactInfo);
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({ name: '', email: '', subject: 'PMB & Pendaftaran', message: '' });
+
+  useEffect(() => {
+    getContactInfo().then(setContactInfo);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,7 +49,7 @@ export const KontakPage: React.FC<KontakPageProps> = ({ onNavigate }) => {
                 <MapPin className="w-5 h-5 text-[#00ADF1] flex-shrink-0 mt-1" />
                 <div>
                   <strong className="text-white block font-semibold mb-0.5">Alamat Kampus Utama:</strong>
-                  <span>{mockContactInfo.address}</span>
+                  <span>{contactInfo.address}</span>
                 </div>
               </div>
 
@@ -51,7 +57,7 @@ export const KontakPage: React.FC<KontakPageProps> = ({ onNavigate }) => {
                 <Phone className="w-5 h-5 text-[#00ADF1] flex-shrink-0 mt-1" />
                 <div>
                   <strong className="text-white block font-semibold mb-0.5">Telepon Call Center:</strong>
-                  <span className="font-mono-code">{mockContactInfo.phone1} / {mockContactInfo.phone2}</span>
+                  <span className="font-mono-code">{contactInfo.phone1} / {contactInfo.phone2}</span>
                 </div>
               </div>
 
@@ -59,7 +65,7 @@ export const KontakPage: React.FC<KontakPageProps> = ({ onNavigate }) => {
                 <Mail className="w-5 h-5 text-[#00ADF1] flex-shrink-0 mt-1" />
                 <div>
                   <strong className="text-white block font-semibold mb-0.5">Email Informasi & PMB:</strong>
-                  <span className="font-mono-code">{mockContactInfo.email}</span>
+                  <span className="font-mono-code">{contactInfo.email}</span>
                 </div>
               </div>
 
@@ -67,7 +73,7 @@ export const KontakPage: React.FC<KontakPageProps> = ({ onNavigate }) => {
                 <Clock className="w-5 h-5 text-[#00ADF1] flex-shrink-0 mt-1" />
                 <div>
                   <strong className="text-white block font-semibold mb-0.5">Jam Operasional Pelayanan:</strong>
-                  <span>{mockContactInfo.operationalHours}</span>
+                  <span>{contactInfo.operationalHours}</span>
                 </div>
               </div>
             </div>
@@ -76,13 +82,13 @@ export const KontakPage: React.FC<KontakPageProps> = ({ onNavigate }) => {
           <div className="pt-6 border-t border-white/10 space-y-3">
             <span className="text-xs font-mono-code text-gray-400 uppercase block">Sosial Media Resmi:</span>
             <div className="flex items-center gap-3">
-              <a href={mockContactInfo.socialMedia.instagram} target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-xl bg-white/10 hover:bg-[#00ADF1] text-white transition">
+              <a href={contactInfo.socialMedia.instagram} target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-xl bg-white/10 hover:bg-[#00ADF1] text-white transition">
                 <Instagram className="w-4 h-4" />
               </a>
-              <a href={mockContactInfo.socialMedia.facebook} target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-xl bg-white/10 hover:bg-[#00ADF1] text-white transition">
+              <a href={contactInfo.socialMedia.facebook} target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-xl bg-white/10 hover:bg-[#00ADF1] text-white transition">
                 <Facebook className="w-4 h-4" />
               </a>
-              <a href={mockContactInfo.socialMedia.youtube} target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-xl bg-white/10 hover:bg-[#00ADF1] text-white transition">
+              <a href={contactInfo.socialMedia.youtube} target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-xl bg-white/10 hover:bg-[#00ADF1] text-white transition">
                 <Youtube className="w-4 h-4" />
               </a>
             </div>

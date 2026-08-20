@@ -30,7 +30,10 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-!ujsyekhs+t&(05#87jghn7h^^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = list(dict.fromkeys(
+    os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+    + ['100.105.149.97']
+))
 
 
 # Application definition
@@ -167,11 +170,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # REST Framework Configuration
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.JSONRenderer',
+        'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
     ],
     'DEFAULT_PARSER_CLASSES': [
-        'rest_framework.parsers.JSONParser',
+        'djangorestframework_camel_case.parser.CamelCaseJSONParser',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 20,
@@ -180,7 +183,10 @@ REST_FRAMEWORK = {
 
 
 # CORS Configuration
-CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:3000').split(',')
+CORS_ALLOWED_ORIGINS = list(dict.fromkeys(
+    os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:3000').split(',')
+    + ['http://127.0.0.1:3000', 'http://100.105.149.97:3000']
+))
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -191,7 +197,15 @@ UNFOLD = {
     "SITE_TITLE": "UIS Admin",
     "SITE_HEADER": "UIS Administration",
     "SITE_SUBHEADER": "Universitas Ichsan Satya",
-    "SITE_SYMBOL": "school",  # Icon from Material Symbols
+    "SITE_LOGO": lambda request: "/static/admin/img/logo-uis-150x150.png",
+    "SITE_FAVICONS": [
+        {
+            "rel": "icon",
+            "type": "image/png",
+            "href": "/static/admin/img/logo-uis-150x150.png",
+        },
+    ],
+    "SITE_SYMBOL": "school",
     "SHOW_HISTORY": True,
     "SHOW_VIEW_ON_SITE": True,
     "STYLES": [

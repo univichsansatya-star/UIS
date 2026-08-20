@@ -19,6 +19,10 @@ $BACKEND_DIR = Join-Path $PROJECT_DIR "backend"
 $FRONTEND_DIR = Join-Path $PROJECT_DIR "frontend"
 $VENV_DIR = Join-Path $BACKEND_DIR "venv"
 $VENV_ACTIVATE = Join-Path $VENV_DIR "Scripts\Activate.ps1"
+$POWERSHELL = (Get-Command pwsh -ErrorAction SilentlyContinue).Source
+if (-not $POWERSHELL) {
+    $POWERSHELL = (Get-Command powershell -ErrorAction Stop).Source
+}
 
 # Colors
 $GREEN = "`e[32m"
@@ -191,7 +195,7 @@ Push-Location $BACKEND_DIR
 & $VENV_ACTIVATE
 
 # Start backend in new window
-Start-Process pwsh -ArgumentList "-NoExit", "-Command", "cd '$BACKEND_DIR'; & '$VENV_ACTIVATE'; python manage.py runserver" -WindowStyle Normal -PassThru
+Start-Process $POWERSHELL -ArgumentList "-NoExit", "-Command", "Set-Location '$BACKEND_DIR'; & '$VENV_ACTIVATE'; python manage.py runserver 0.0.0.0:8000" -WindowStyle Normal -PassThru
 
 # Give backend time to start
 Start-Sleep -Seconds 3
@@ -207,7 +211,7 @@ Write-Host "${BLUE}========================================`n${NC}"
 Push-Location $FRONTEND_DIR
 
 # Start frontend in new window
-Start-Process pwsh -ArgumentList "-NoExit", "-Command", "cd '$FRONTEND_DIR'; npm run dev" -WindowStyle Normal -PassThru
+Start-Process $POWERSHELL -ArgumentList "-NoExit", "-Command", "Set-Location '$FRONTEND_DIR'; npm run dev" -WindowStyle Normal -PassThru
 
 # Done
 Write-Host "`n${GREEN}Both services are starting in separate windows...${NC}"

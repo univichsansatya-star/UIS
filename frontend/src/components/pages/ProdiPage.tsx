@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { HeaderRunningMotif } from '../layout/HeaderRunningMotif';
 import { mockStudyPrograms, mockFaculties } from '../../lib/api/mockData';
+import { getStudyProgramBySlug } from '../../lib/api/facultyApi';
 import { StudyProgram } from '../../types';
 import { 
   Award, BookOpen, GraduationCap, Building2, CheckCircle2, 
@@ -17,8 +18,8 @@ export const ProdiPage: React.FC<ProdiPageProps> = ({ prodiId, onNavigate }) => 
   const [activeTab, setActiveTab] = useState<'overview' | 'curriculum' | 'tuition'>('overview');
 
   useEffect(() => {
-    const data = mockStudyPrograms.find(p => p.id === prodiId) || mockStudyPrograms[0];
-    setProdi(data);
+    const fallback = mockStudyPrograms.find((program) => program.id === prodiId) || mockStudyPrograms[0];
+    getStudyProgramBySlug(fallback.slug).then((data) => setProdi(data || fallback));
     setActiveTab('overview');
   }, [prodiId]);
 

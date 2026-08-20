@@ -20,7 +20,7 @@ export const BeritaDetailPage: React.FC<BeritaDetailPageProps> = ({ slug, onNavi
       const newsItem = await getNewsBySlug(slug);
       setArticle(newsItem);
       const all = await getNewsList();
-      setRelatedNews(all.filter(n => n.slug !== slug).slice(0, 3));
+      setRelatedNews(all.filter((n: any) => n.slug !== slug).slice(0, 3));
       setLoading(false);
     }
     loadData();

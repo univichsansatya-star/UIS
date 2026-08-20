@@ -1,15 +1,12 @@
-// Admission API functions
-// These should connect to your backend API
-
-const API_BASE_URL = 'http://localhost:8000/api';
+import API_BASE_URL, { extractResults } from './apiConfig';
 
 export interface AdmissionApplicationData {
   fullName: string;
   email: string;
   phone: string;
   chosenProgramId: number;
-  highSchool: string;
-  graduationYear: number;
+  previousSchool: string;
+  graduationYear: string;
 }
 
 export interface AcademicRegistrationForm {
@@ -21,7 +18,7 @@ export interface AcademicRegistrationForm {
 // Submit admission application
 export async function submitAdmissionApplication(data: AdmissionApplicationData) {
   try {
-    const response = await fetch(`${API_BASE_URL}/admissions/`, {
+    const response = await fetch(`${API_BASE_URL}/pmb/register/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -43,7 +40,7 @@ export async function submitAdmissionApplication(data: AdmissionApplicationData)
 // Submit academic registration
 export async function submitAcademicRegistration(data: AcademicRegistrationForm) {
   try {
-    const response = await fetch(`${API_BASE_URL}/academics/`, {
+    const response = await fetch(`${API_BASE_URL}/layanan-akademik/submit/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -65,7 +62,7 @@ export async function submitAcademicRegistration(data: AcademicRegistrationForm)
 // Submit tracer study
 export async function submitTracerStudy(data: any) {
   try {
-    const response = await fetch(`${API_BASE_URL}/tracer-studies/`, {
+    const response = await fetch(`${API_BASE_URL}/tracer-study/submit/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -87,13 +84,13 @@ export async function submitTracerStudy(data: any) {
 // Get study programs
 export async function getStudyPrograms() {
   try {
-    const response = await fetch(`${API_BASE_URL}/programs-public/`);
+    const response = await fetch(`${API_BASE_URL}/prodi/`);
 
     if (!response.ok) {
       throw new Error(`API error: ${response.status}`);
     }
 
-    return await response.json();
+    return extractResults(await response.json());
   } catch (error) {
     console.error('Error fetching study programs:', error);
     throw error;
@@ -103,13 +100,13 @@ export async function getStudyPrograms() {
 // Get news
 export async function getNews() {
   try {
-    const response = await fetch(`${API_BASE_URL}/news/`);
+    const response = await fetch(`${API_BASE_URL}/berita/`);
 
     if (!response.ok) {
       throw new Error(`API error: ${response.status}`);
     }
 
-    return await response.json();
+    return extractResults(await response.json());
   } catch (error) {
     console.error('Error fetching news:', error);
     throw error;
@@ -117,9 +114,9 @@ export async function getNews() {
 }
 
 // Get news detail
-export async function getNewsDetail(id: number) {
+export async function getNewsDetail(slug: string) {
   try {
-    const response = await fetch(`${API_BASE_URL}/news/${id}/`);
+    const response = await fetch(`${API_BASE_URL}/berita/${encodeURIComponent(slug)}/`);
 
     if (!response.ok) {
       throw new Error(`API error: ${response.status}`);
@@ -132,19 +129,3 @@ export async function getNewsDetail(id: number) {
   }
 }
 
-// Get content (pages)
-export async function getContent(slug: string) {
-  try {
-    const response = await fetch(`${API_BASE_URL}/content/?slug=${slug}`);
-
-    if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data.results?.[0] || null;
-  } catch (error) {
-    console.error('Error fetching content:', error);
-    throw error;
-  }
-}
