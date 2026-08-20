@@ -1,9 +1,10 @@
 from django.contrib import admin
+from unfold.admin import ModelAdmin
 from .models import News, ResearchNews
 
 
 @admin.register(News)
-class NewsAdmin(admin.ModelAdmin):
+class NewsAdmin(ModelAdmin):
     list_display = ('title', 'category', 'author', 'published_at', 'views_count')
     list_filter = ('category', 'published_at')
     search_fields = ('title', 'author', 'summary')
@@ -31,7 +32,7 @@ class NewsAdmin(admin.ModelAdmin):
 
 
 @admin.register(ResearchNews)
-class ResearchNewsAdmin(admin.ModelAdmin):
+class ResearchNewsAdmin(ModelAdmin):
     list_display = ('title', 'category', 'author', 'published_at')
     list_filter = ('category', 'published_at')
     search_fields = ('title', 'author', 'abstract')

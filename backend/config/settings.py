@@ -36,6 +36,7 @@ ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 # Application definition
 
 INSTALLED_APPS = [
+    'unfold',  # django-unfold must be before django.contrib.admin
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -182,3 +183,35 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:3000').split(',')
 
 CORS_ALLOW_CREDENTIALS = True
+
+# Unfold Theme Configuration
+from django.urls import reverse_lazy
+
+UNFOLD = {
+    "SITE_TITLE": "UIS Admin",
+    "SITE_HEADER": "UIS Administration",
+    "SITE_SUBHEADER": "Universitas Ichsan Satya",
+    "SITE_SYMBOL": "school",  # Icon from Material Symbols
+    "SHOW_HISTORY": True,
+    "SHOW_VIEW_ON_SITE": True,
+    "STYLES": [
+        lambda request: "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap",
+    ],
+    "COLORS": {
+        "primary": {
+            "50": "239 246 255",     # Blue 50
+            "100": "219 234 254",    # Blue 100
+            "200": "191 219 254",    # Blue 200
+            "300": "147 197 253",    # Blue 300
+            "400": "96 165 250",     # Blue 400
+            "500": "59 130 246",     # Blue 500 (Primary #3b82f6)
+            "600": "37 99 235",      # Blue 600
+            "700": "29 78 216",      # Blue 700
+            "800": "30 58 138",      # Blue 800 (Navy #1e3a8a)
+            "900": "15 23 42",       # Slate 900 (Ink #0f172a)
+            "950": "8 11 25",
+        },
+    },
+    "DASHBOARD_CALLBACK": "config.dashboard.dashboard_callback",
+}
+

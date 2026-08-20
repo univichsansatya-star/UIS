@@ -1,171 +1,90 @@
-{% extends "admin/base_site.html" %}
-{% load i18n log static %}
+{% extends 'admin/base.html' %}
 
-{% block extrastyle %}
-  {{ block.super }}
-  <link rel="stylesheet" href="{% static 'admin/css/dashboard.css' %}">
+{% load admin_list i18n log unfold %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block branding %}
+    <h1 id="site-name">
+        <a href="{% url 'admin:index' %}">{{ site_header|default:_('Django administration') }}</a>
+    </h1>
 {% endblock %}
-
-{% block coltype %}colMS{% endblock %}
-{% block bodyclass %}{{ block.super }} dashboard{% endblock %}
-{% block nav-breadcrumbs %}{% endblock %}
-{% block nav-sidebar %}{% endblock %}
 
 {% block content %}
-<div class="uis-dashboard">
-  <section class="uis-welcome-panel">
-    <div>
-      <span class="uis-eyebrow">CONTROL CENTER</span>
-      <h1>Selamat datang, {{ user.get_short_name|default:user.username }}.</h1>
-      <p>Kelola konten, akademik, penerimaan mahasiswa, dan informasi publik UIS dari satu tempat.</p>
-    </div>
-    <div class="uis-welcome-date">{% now "l, d F Y" %}</div>
-  </section>
+    <div class="flex flex-col gap-8">
+        <section>
+            <h1 class="font-semibold text-2xl text-gray-700 dark:text-gray-200">Selamat datang, {{ user.get_short_name|default:user.username }}</h1>
+            <p class="leading-relaxed mt-2 text-sm text-gray-500 dark:text-gray-400">Kelola konten, akademik, penerimaan mahasiswa, dan informasi publik UIS dari satu tempat.</p>
+        </section>
 
-  <section class="uis-stat-grid" aria-label="Ringkasan administrasi">
-    <div class="uis-stat-card uis-stat-blue">
-      <span class="uis-stat-label">MODUL AKTIF</span>
-      <strong>{{ app_list|length }}</strong>
-      <span class="uis-stat-meta">area administrasi</span>
-    </div>
-    <div class="uis-stat-card uis-stat-cyan">
-      <span class="uis-stat-label">AKSES ANDA</span>
-      <strong>ADMIN</strong>
-      <span class="uis-stat-meta">akses penuh sistem</span>
-    </div>
-    <div class="uis-stat-card uis-stat-green">
-      <span class="uis-stat-label">STATUS SISTEM</span>
-      <strong>AKTIF</strong>
-      <span class="uis-stat-meta"><i class="uis-status-dot"></i> layanan berjalan</span>
-    </div>
-    <div class="uis-stat-card uis-stat-orange">
-      <span class="uis-stat-label">AKSI CEPAT</span>
-      <strong>4</strong>
-      <span class="uis-stat-meta">shortcut tersedia</span>
-    </div>
-  </section>
-
-  <section class="uis-chart-grid" aria-label="Statistik administrasi">
-    <div class="uis-chart-card">
-      <div class="uis-section-heading">
-        <div><span class="uis-eyebrow">DATABASE OVERVIEW</span><h2>Data per modul</h2></div>
-        <span class="uis-section-caption">{{ admin_metrics.total_records }} total record</span>
-      </div>
-      <div class="uis-bar-chart" id="module-chart">
-        {% for item in admin_metrics.app_counts|slice:':6' %}
-          <div class="uis-bar-row" data-value="{{ item.count }}">
-            <div class="uis-bar-label"><span>{{ item.label }}</span><b>{{ item.count }}</b></div>
-            <div class="uis-bar-track"><span class="uis-bar-fill"></span></div>
-          </div>
-        {% empty %}
-          <div class="uis-empty-chart">Belum ada data untuk ditampilkan.</div>
-        {% endfor %}
-      </div>
-    </div>
-    <div class="uis-chart-card uis-distribution-card">
-      <div class="uis-section-heading">
-        <div><span class="uis-eyebrow">AUDIT EVENTS</span><h2>Aktivitas sistem</h2></div>
-        <span class="uis-section-caption">semua aktivitas</span>
-      </div>
-      <div class="uis-donut-wrap">
-        <div class="uis-donut" id="activity-donut"><div><strong id="activity-total">0</strong><small>aktivitas</small></div></div>
-        <div class="uis-legend">
-          <span><i class="legend-add"></i>Ditambahkan <b>{{ admin_metrics.action_counts.1|default:0 }}</b></span>
-          <span><i class="legend-change"></i>Diubah <b>{{ admin_metrics.action_counts.2|default:0 }}</b></span>
-          <span><i class="legend-delete"></i>Dihapus <b>{{ admin_metrics.action_counts.3|default:0 }}</b></span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="uis-quick-actions">
-    <div class="uis-section-heading">
-      <div>
-        <span class="uis-eyebrow">WORKSPACE</span>
-        <h2>Aksi cepat</h2>
-      </div>
-      <span class="uis-section-caption">Mulai dari pekerjaan yang paling sering dilakukan</span>
-    </div>
-    <div class="uis-action-grid">
-      <a class="uis-action-card" href="{% url 'admin:news_news_add' %}"><span class="uis-action-icon">+</span><span><b>Tulis berita</b><small>Publikasikan informasi terbaru</small></span></a>
-      <a class="uis-action-card" href="{% url 'admin:admissions_admissionapplication_changelist' %}"><span class="uis-action-icon">↗</span><span><b>Periksa pendaftar</b><small>Lihat data aplikasi masuk</small></span></a>
-      <a class="uis-action-card" href="{% url 'admin:academics_faculty_changelist' %}"><span class="uis-action-icon">⌂</span><span><b>Data akademik</b><small>Kelola fakultas dan prodi</small></span></a>
-      <a class="uis-action-card" href="{% url 'admin:auth_user_changelist' %}"><span class="uis-action-icon">◎</span><span><b>Kelola pengguna</b><small>Atur akun dan akses admin</small></span></a>
-    </div>
-  </section>
-
-  <div class="uis-dashboard-columns">
-    <section class="uis-module-section">
-      <div class="uis-section-heading">
-        <div>
-          <span class="uis-eyebrow">CONTENT AREAS</span>
-          <h2>Modul administrasi</h2>
-        </div>
-        <span class="uis-section-caption">{{ app_list|length }} kelompok tersedia</span>
-      </div>
-      <div id="content-main">
-        {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}
-      </div>
-    </section>
-
-    <aside class="uis-activity-panel">
-      <div class="uis-section-heading">
-        <div>
-          <span class="uis-eyebrow">AUDIT TRAIL</span>
-          <h2>Aktivitas terbaru</h2>
-        </div>
-      </div>
-      {% get_admin_log 8 as admin_log for_user user %}
-      {% if not admin_log %}
-        <div class="uis-empty-state"><span>✓</span><p>Belum ada aktivitas tercatat.</p></div>
-      {% else %}
-        <div class="uis-activity-list">
-          {% for entry in admin_log %}
-            <div class="uis-activity-item">
-              <span class="uis-activity-marker {% if entry.is_deletion %}is-delete{% elif entry.is_addition %}is-add{% endif %}"></span>
-              <div>
-                <div class="uis-activity-title">
-                  {% if entry.is_addition %}Menambahkan{% elif entry.is_change %}Memperbarui{% elif entry.is_deletion %}Menghapus{% else %}Mengakses{% endif %}
-                  {% if entry.is_deletion or not entry.get_admin_url %} {{ entry.object_repr }}{% else %} <a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>{% endif %}
+        <section class="gap-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
+            {% component "unfold/components/card.html" with title="Modul aktif" %}
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary-600">apps</span>
+                    {% component "unfold/components/title.html" %}{{ total_apps }}{% endcomponent %}
                 </div>
-                <span class="uis-activity-meta">{{ entry.content_type.name|default:'Sistem' }} · {{ entry.action_time|date:'d M, H:i' }}</span>
-              </div>
-            </div>
-          {% endfor %}
+            {% endcomponent %}
+            {% component "unfold/components/card.html" with title="Total record" %}
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary-600">database</span>
+                    {% component "unfold/components/title.html" %}{{ total_records }}{% endcomponent %}
+                </div>
+            {% endcomponent %}
+            {% component "unfold/components/card.html" with title="Aktivitas" %}
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary-600">history</span>
+                    {% component "unfold/components/title.html" %}{{ total_actions }}{% endcomponent %}
+                </div>
+            {% endcomponent %}
+            {% component "unfold/components/card.html" with title="Admin aktif" %}
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary-600">manage_accounts</span>
+                    {% component "unfold/components/title.html" %}{{ active_admin_count|default:'-' }}{% endcomponent %}
+                </div>
+            {% endcomponent %}
+        </section>
+
+        <div class="flex flex-col gap-8 lg:grid lg:grid-cols-2">
+            <section>
+                {% component "unfold/components/card.html" with title="Distribusi record" %}
+                    <div class="flex flex-col gap-5">
+                        {% for app in app_counts %}
+                            {% component "unfold/components/progress.html" with title=app.label description=app.count value=app.percentage %}{% endcomponent %}
+                        {% empty %}
+                            {% component "unfold/components/text.html" %}Belum ada record untuk ditampilkan.{% endcomponent %}
+                        {% endfor %}
+                    </div>
+                {% endcomponent %}
+            </section>
+
+            <section>
+                {% component "unfold/components/card.html" with title="Aktivitas terbaru" %}
+                    <div class="flex flex-col divide-y dark:divide-gray-800">
+                        {% get_admin_log 6 as admin_log for_user user %}
+                        {% for entry in admin_log %}
+                            <div class="flex flex-col gap-1 py-3 first:pt-0 last:pb-0">
+                                <span class="font-medium text-sm text-gray-700 dark:text-gray-200">{{ entry.object_repr|truncatechars:70 }}</span>
+                                <span class="text-xs text-gray-500 dark:text-gray-400">{{ entry.get_change_message|default:'Aktivitas admin' }} · {{ entry.action_time|date:'d M Y H:i' }}</span>
+                            </div>
+                        {% empty %}
+                            {% component "unfold/components/text.html" %}Belum ada aktivitas terbaru.{% endcomponent %}
+                        {% endfor %}
+                    </div>
+                {% endcomponent %}
+            </section>
         </div>
-      {% endif %}
-    </aside>
-  </div>
-</div>
-{% endblock %}
 
-{% block sidebar %}{% endblock %}
-
-{% block footer %}
-  {{ block.super }}
-  <script>
-    (() => {
-      const rows = [...document.querySelectorAll('.uis-bar-row')];
-      const max = Math.max(...rows.map((row) => Number(row.dataset.value) || 0), 1);
-      rows.forEach((row) => {
-        row.querySelector('.uis-bar-fill').style.width = `${Math.max(8, (Number(row.dataset.value) / max) * 100)}%`;
-      });
-      const values = [
-        Number('{{ admin_metrics.action_counts.1|default:0 }}'),
-        Number('{{ admin_metrics.action_counts.2|default:0 }}'),
-        Number('{{ admin_metrics.action_counts.3|default:0 }}'),
-      ];
-      const total = values.reduce((sum, value) => sum + value, 0);
-      document.getElementById('activity-total').textContent = total;
-      const colors = ['#24a148', '#00adf1', '#d9232c'];
-      let start = 0;
-      const stops = values.map((value, index) => {
-        const end = start + (total ? (value / total) * 360 : 0);
-        const stop = `${colors[index]} ${start}deg ${end}deg`;
-        start = end;
-        return stop;
-      });
-      document.getElementById('activity-donut').style.background = total ? `conic-gradient(${stops.join(',')})` : '#dbe4ef';
-    })();
-  </script>
+        <section>
+            {% component "unfold/components/card.html" with title="Akses cepat" %}
+                <div class="gap-3 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
+                    <a class="bg-primary-600 border border-transparent font-medium px-3 py-2 rounded-md text-center text-sm text-white" href="{% url 'admin:news_news_add' %}">Tambah berita</a>
+                    <a class="border font-medium px-3 py-2 rounded-md text-center text-sm text-gray-700 dark:border-gray-700 dark:text-gray-200" href="{% url 'admin:admissions_admissionapplication_changelist' %}">Cek pendaftar</a>
+                    <a class="border font-medium px-3 py-2 rounded-md text-center text-sm text-gray-700 dark:border-gray-700 dark:text-gray-200" href="{% url 'admin:academics_faculty_changelist' %}">Data akademik</a>
+                    <a class="border font-medium px-3 py-2 rounded-md text-center text-sm text-gray-700 dark:border-gray-700 dark:text-gray-200" href="{% url 'admin:auth_user_changelist' %}">Kelola pengguna</a>
+                </div>
+            {% endcomponent %}
+        </section>
+    </div>
 {% endblock %}

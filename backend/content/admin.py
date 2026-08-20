@@ -1,10 +1,18 @@
 from django.contrib import admin
-from solo.admin import SingletonModelAdmin
+from unfold.admin import ModelAdmin
 from .models import ContactInfo, CampusStats, RectorGreeting, HeroSlide, PopupAnnouncement
 
 
+class UnfoldSingletonModelAdmin(ModelAdmin):
+    def has_add_permission(self, request):
+        return not self.model.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
 @admin.register(ContactInfo)
-class ContactInfoAdmin(SingletonModelAdmin):
+class ContactInfoAdmin(UnfoldSingletonModelAdmin):
     fieldsets = (
         ('Contact Information', {
             'fields': ('address', 'phone1', 'phone2', 'whatsapp', 'email', 'pmb_email', 'operational_hours', 'google_maps_embed_url')
@@ -16,12 +24,12 @@ class ContactInfoAdmin(SingletonModelAdmin):
 
 
 @admin.register(CampusStats)
-class CampusStatsAdmin(SingletonModelAdmin):
+class CampusStatsAdmin(UnfoldSingletonModelAdmin):
     pass
 
 
 @admin.register(RectorGreeting)
-class RectorGreetingAdmin(SingletonModelAdmin):
+class RectorGreetingAdmin(UnfoldSingletonModelAdmin):
     list_display = ('name', 'title')
     fieldsets = (
         ('Rector Information', {
@@ -31,7 +39,7 @@ class RectorGreetingAdmin(SingletonModelAdmin):
 
 
 @admin.register(HeroSlide)
-class HeroSlideAdmin(admin.ModelAdmin):
+class HeroSlideAdmin(ModelAdmin):
     list_display = ('title', 'order')
     list_editable = ('order',)
     ordering = ['order']
@@ -46,7 +54,7 @@ class HeroSlideAdmin(admin.ModelAdmin):
 
 
 @admin.register(PopupAnnouncement)
-class PopupAnnouncementAdmin(admin.ModelAdmin):
+class PopupAnnouncementAdmin(ModelAdmin):
     list_display = ('title', 'is_active', 'created_at')
     list_filter = ('is_active', 'created_at')
     search_fields = ('title', 'description')

@@ -1,9 +1,10 @@
 from django.contrib import admin
+from unfold.admin import ModelAdmin
 from .models import Faculty, StudyProgram, Accreditation
 
 
 @admin.register(Faculty)
-class FacultyAdmin(admin.ModelAdmin):
+class FacultyAdmin(ModelAdmin):
     list_display = ('name', 'dean_name', 'created_at')
     search_fields = ('name', 'dean_name')
     readonly_fields = ('slug', 'created_at', 'updated_at')
@@ -26,7 +27,7 @@ class StudyProgramInline(admin.TabularInline):
 
 
 @admin.register(StudyProgram)
-class StudyProgramAdmin(admin.ModelAdmin):
+class StudyProgramAdmin(ModelAdmin):
     list_display = ('name', 'degree', 'accreditation', 'faculty', 'duration_years')
     list_filter = ('degree', 'accreditation', 'faculty')
     search_fields = ('name', 'head_of_program')
@@ -46,7 +47,7 @@ class StudyProgramAdmin(admin.ModelAdmin):
 
 
 @admin.register(Accreditation)
-class AccreditationAdmin(admin.ModelAdmin):
+class AccreditationAdmin(ModelAdmin):
     list_display = ('title', 'category', 'accreditation_grade', 'valid_until')
     list_filter = ('category', 'accreditation_grade', 'valid_until')
     search_fields = ('title', 'decree_number')

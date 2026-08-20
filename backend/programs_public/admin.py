@@ -1,4 +1,5 @@
 from django.contrib import admin
+from unfold.admin import ModelAdmin
 from .models import Training, Speaker, JobVacancy, Scholarship, Testimonial, DocumentCategory, DocumentItem, GuidelineItem
 
 
@@ -9,7 +10,7 @@ class SpeakerInline(admin.TabularInline):
 
 
 @admin.register(Training)
-class TrainingAdmin(admin.ModelAdmin):
+class TrainingAdmin(ModelAdmin):
     list_display = ('title', 'date', 'status', 'location')
     list_filter = ('status', 'date')
     search_fields = ('title', 'location')
@@ -36,7 +37,7 @@ class TrainingAdmin(admin.ModelAdmin):
 
 
 @admin.register(JobVacancy)
-class JobVacancyAdmin(admin.ModelAdmin):
+class JobVacancyAdmin(ModelAdmin):
     list_display = ('title', 'company_name', 'field', 'close_date', 'is_published')
     list_filter = ('field', 'is_published', 'close_date')
     search_fields = ('title', 'company_name', 'location')
@@ -62,7 +63,7 @@ class JobVacancyAdmin(admin.ModelAdmin):
 
 
 @admin.register(Scholarship)
-class ScholarshipAdmin(admin.ModelAdmin):
+class ScholarshipAdmin(ModelAdmin):
     list_display = ('title', 'provider', 'deadline', 'is_published')
     list_filter = ('provider', 'is_published', 'deadline')
     search_fields = ('title', 'provider')
@@ -85,7 +86,7 @@ class ScholarshipAdmin(admin.ModelAdmin):
 
 
 @admin.register(Testimonial)
-class TestimonialAdmin(admin.ModelAdmin):
+class TestimonialAdmin(ModelAdmin):
     list_display = ('name', 'program_name', 'current_job', 'graduate_year')
     list_filter = ('graduate_year', 'program_name')
     search_fields = ('name', 'program_name', 'company')
@@ -108,7 +109,7 @@ class TestimonialAdmin(admin.ModelAdmin):
 
 
 @admin.register(DocumentCategory)
-class DocumentCategoryAdmin(admin.ModelAdmin):
+class DocumentCategoryAdmin(ModelAdmin):
     list_display = ('name',)
     search_fields = ('name',)
 
@@ -121,7 +122,7 @@ class DocumentItemInline(admin.TabularInline):
 
 
 @admin.register(DocumentItem)
-class DocumentItemAdmin(admin.ModelAdmin):
+class DocumentItemAdmin(ModelAdmin):
     list_display = ('title', 'category', 'file_type', 'updated_at')
     list_filter = ('category', 'file_type', 'updated_at')
     search_fields = ('title', 'description')
@@ -141,7 +142,7 @@ class DocumentItemAdmin(admin.ModelAdmin):
 
 
 @admin.register(GuidelineItem)
-class GuidelineItemAdmin(admin.ModelAdmin):
+class GuidelineItemAdmin(ModelAdmin):
     list_display = ('title', 'category', 'target_audience', 'updated_at')
     list_filter = ('category', 'target_audience', 'updated_at')
     search_fields = ('title', 'category')

@@ -1,9 +1,10 @@
 from django.contrib import admin
+from unfold.admin import ModelAdmin
 from .models import AdmissionApplication, AcademicRegistrationForm, TracerStudySubmission
 
 
 @admin.register(AdmissionApplication)
-class AdmissionApplicationAdmin(admin.ModelAdmin):
+class AdmissionApplicationAdmin(ModelAdmin):
     list_display = ('full_name', 'registration_number', 'chosen_program', 'created_at')
     list_filter = ('chosen_program', 'gender', 'created_at')
     search_fields = ('full_name', 'email', 'nik', 'registration_number')
@@ -29,7 +30,7 @@ class AdmissionApplicationAdmin(admin.ModelAdmin):
 
 
 @admin.register(AcademicRegistrationForm)
-class AcademicRegistrationFormAdmin(admin.ModelAdmin):
+class AcademicRegistrationFormAdmin(ModelAdmin):
     list_display = ('full_name', 'ticket_no', 'type', 'study_program', 'created_at')
     list_filter = ('type', 'study_program', 'created_at')
     search_fields = ('full_name', 'nim', 'email', 'ticket_no')
@@ -53,7 +54,7 @@ class AcademicRegistrationFormAdmin(admin.ModelAdmin):
 
 
 @admin.register(TracerStudySubmission)
-class TracerStudySubmissionAdmin(admin.ModelAdmin):
+class TracerStudySubmissionAdmin(ModelAdmin):
     list_display = ('full_name', 'nim', 'graduation_year', 'employment_status', 'created_at')
     list_filter = ('employment_status', 'relevance_to_major', 'graduation_year', 'created_at')
     search_fields = ('full_name', 'nim', 'company_name', 'job_title')
