@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from config.image_validation import validate_news_image
 
 
 class News(models.Model):
@@ -15,7 +16,11 @@ class News(models.Model):
     slug = models.SlugField(unique=True, blank=True)
     title = models.CharField(max_length=255)
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
-    cover_image = models.ImageField(upload_to='news/')
+    cover_image = models.ImageField(
+        upload_to='news/',
+        validators=[validate_news_image],
+        help_text='Wajib 1200 x 675 px, JPG/PNG/WebP. Rasio 16:9.',
+    )
     published_at = models.DateTimeField(db_index=True)
     author = models.CharField(max_length=255)
     summary = models.TextField()
@@ -54,7 +59,11 @@ class ResearchNews(models.Model):
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
     author = models.CharField(max_length=255)
     published_at = models.DateTimeField(db_index=True)
-    cover_image = models.ImageField(upload_to='research/')
+    cover_image = models.ImageField(
+        upload_to='research/',
+        validators=[validate_news_image],
+        help_text='Wajib 1200 x 675 px, JPG/PNG/WebP. Rasio 16:9.',
+    )
     abstract = models.TextField()
     content = models.TextField(help_text="Rich text/HTML content")
     download_pdf_url = models.URLField(blank=True, null=True)

@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from config.image_validation import validate_card_image, validate_square_photo, validate_training_image
 
 
 class Training(models.Model):
@@ -12,7 +13,11 @@ class Training(models.Model):
     slug = models.SlugField(unique=True, blank=True)
     title = models.CharField(max_length=255)
     subtitle = models.CharField(max_length=255)
-    image = models.ImageField(upload_to='training/')
+    image = models.ImageField(
+        upload_to='training/',
+        validators=[validate_training_image],
+        help_text='Wajib 1200 x 675 px, JPG/PNG/WebP. Rasio 16:9.',
+    )
     date = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField()
@@ -41,7 +46,11 @@ class Speaker(models.Model):
     """Speakers for training"""
     name = models.CharField(max_length=255)
     role = models.CharField(max_length=255)
-    photo = models.ImageField(upload_to='speakers/')
+    photo = models.ImageField(
+        upload_to='speakers/',
+        validators=[validate_square_photo],
+        help_text='Wajib 600 x 600 px, JPG/PNG/WebP. Foto square 1:1.',
+    )
     institution = models.CharField(max_length=255, blank=True, null=True)
     training = models.ForeignKey(Training, on_delete=models.CASCADE, related_name='speakers')
     
@@ -68,7 +77,11 @@ class JobVacancy(models.Model):
     requirements = models.JSONField(default=list, help_text="List of requirements")
     open_date = models.DateField()
     close_date = models.DateField()
-    image = models.ImageField(upload_to='jobs/')
+    image = models.ImageField(
+        upload_to='jobs/',
+        validators=[validate_card_image],
+        help_text='Wajib 1200 x 800 px, JPG/PNG/WebP. Rasio 3:2.',
+    )
     is_published = models.BooleanField(default=True)
     contact_email = models.EmailField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -92,7 +105,11 @@ class Scholarship(models.Model):
     
     title = models.CharField(max_length=255)
     provider = models.CharField(max_length=100, choices=PROVIDER_CHOICES)
-    image = models.ImageField(upload_to='scholarships/')
+    image = models.ImageField(
+        upload_to='scholarships/',
+        validators=[validate_card_image],
+        help_text='Wajib 1200 x 800 px, JPG/PNG/WebP. Rasio 3:2.',
+    )
     summary = models.TextField()
     eligibility = models.JSONField(default=list, help_text="List of eligibility criteria")
     benefits = models.JSONField(default=list, help_text="List of benefits")
@@ -116,7 +133,11 @@ class Testimonial(models.Model):
     current_job = models.CharField(max_length=255)
     company = models.CharField(max_length=255)
     quote = models.TextField()
-    photo = models.ImageField(upload_to='testimonials/')
+    photo = models.ImageField(
+        upload_to='testimonials/',
+        validators=[validate_square_photo],
+        help_text='Wajib 600 x 600 px, JPG/PNG/WebP. Foto square 1:1.',
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:

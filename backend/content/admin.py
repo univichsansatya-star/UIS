@@ -1,6 +1,9 @@
 from django.contrib import admin
 from django import forms
 from unfold.admin import ModelAdmin
+from config.image_forms import image_upload_field
+from config.image_validation import validate_popup_image
+from config.image_validation import validate_hero_image, validate_rector_photo
 from .models import ContactInfo, CampusStats, RectorGreeting, HeroSlide, PopupAnnouncement
 
 
@@ -31,6 +34,14 @@ class CampusStatsAdmin(UnfoldSingletonModelAdmin):
 
 @admin.register(RectorGreeting)
 class RectorGreetingAdmin(UnfoldSingletonModelAdmin):
+    class RectorGreetingAdminForm(forms.ModelForm):
+        photo = image_upload_field('Foto Rektor', '600 x 800', '3:4', validate_rector_photo)
+
+        class Meta:
+            model = RectorGreeting
+            fields = '__all__'
+
+    form = RectorGreetingAdminForm
     list_display = ('name', 'title')
     fieldsets = (
         ('Rector Information', {
@@ -40,13 +51,7 @@ class RectorGreetingAdmin(UnfoldSingletonModelAdmin):
 
 
 class HeroSlideAdminForm(forms.ModelForm):
-    image = forms.ImageField(
-        label='Image (1920 x 720 px)',
-        help_text=(
-            'Recommended: 1920 x 720 px (ratio 8:3), JPG or WebP. '
-            'Keep important text or logos in the center because the image uses object-cover on mobile.'
-        ),
-    )
+    image = image_upload_field('Hero Slide', '1920 x 720', '8:3', validate_hero_image)
 
     class Meta:
         model = HeroSlide
@@ -71,6 +76,14 @@ class HeroSlideAdmin(ModelAdmin):
 
 @admin.register(PopupAnnouncement)
 class PopupAnnouncementAdmin(ModelAdmin):
+    class PopupAnnouncementAdminForm(forms.ModelForm):
+        image = image_upload_field('Popup Announcement', '1200 x 800', '3:2', validate_popup_image)
+
+        class Meta:
+            model = PopupAnnouncement
+            fields = '__all__'
+
+    form = PopupAnnouncementAdminForm
     list_display = ('title', 'is_active', 'created_at')
     list_filter = ('is_active', 'created_at')
     search_fields = ('title', 'description')

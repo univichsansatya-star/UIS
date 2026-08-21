@@ -1,4 +1,4 @@
-import API_BASE_URL from './apiConfig';
+import API_BASE_URL, { resolveMediaUrl } from './apiConfig';
 import { mockCampusStats, mockContactInfo, mockHeroSlides, mockPopupAnnouncement, mockRectorGreeting } from './mockData';
 
 async function getContent<T>(path: string, fallback: T): Promise<T> {
@@ -19,4 +19,11 @@ export const getContactInfo = () => getContent('contact-info/', mockContactInfo)
 export const getCampusStats = () => getContent('campus-stats/', mockCampusStats);
 export const getRectorGreeting = () => getContent('rector-greeting/', mockRectorGreeting);
 export const getHeroSlides = () => getContent('hero-slides/', mockHeroSlides);
-export const getPopupAnnouncement = () => getContent('popup-announcement/', mockPopupAnnouncement);
+export async function getPopupAnnouncement() {
+  const popup = await getContent('popup-announcement/', null);
+  if (!popup) return mockPopupAnnouncement;
+  return {
+    ...popup,
+    image: resolveMediaUrl(popup.image),
+  };
+}

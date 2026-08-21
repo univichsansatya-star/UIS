@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { mockPopupAnnouncement } from '../../lib/api/mockData';
+import { getPopupAnnouncement } from '../../lib/api/contentApi';
+import type { PopupAnnouncement } from '../../types';
 import { X, ArrowRight, Sparkles } from 'lucide-react';
 
 interface PopupModalProps {
@@ -8,29 +10,33 @@ interface PopupModalProps {
 
 export const PopupModal: React.FC<PopupModalProps> = ({ onNavigate }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [announcement, setAnnouncement] = useState<PopupAnnouncement | null>(null);
 
   useEffect(() => {
-    // Check if dismissed in session
-    const dismissed = sessionStorage.getItem('uis_popup_dismissed');
-    if (!dismissed && mockPopupAnnouncement.isActive) {
-      const timer = setTimeout(() => {
-        setIsOpen(true);
-      }, 1200);
-      return () => clearTimeout(timer);
-    }
+    let cancelled = false;
+    getPopupAnnouncement().then((data) => {
+      if (cancelled || !data?.isActive) return;
+      setAnnouncement(data);
+      const dismissedId = sessionStorage.getItem('uis_popup_dismissed_id');
+      if (dismissedId !== String(data.id)) {
+        const timer = setTimeout(() => setIsOpen(true), 1200);
+        return () => clearTimeout(timer);
+      }
+    });
+    return () => { cancelled = true; };
   }, []);
 
   const handleClose = () => {
     setIsOpen(false);
-    sessionStorage.setItem('uis_popup_dismissed', 'true');
+    if (announcement) sessionStorage.setItem('uis_popup_dismissed_id', String(announcement.id));
   };
 
   const handleCta = () => {
     handleClose();
-    onNavigate(mockPopupAnnouncement.ctaLink);
+    onNavigate(announcement?.ctaLink || mockPopupAnnouncement.ctaLink);
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || !announcement) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
@@ -48,8 +54,8 @@ export const PopupModal: React.FC<PopupModalProps> = ({ onNavigate }) => {
         {/* Modal Header Image */}
         <div className="relative h-48 sm:h-56 bg-gradient-to-tr from-[#17356B] to-[#00ADF1]">
           <img 
-            src={mockPopupAnnouncement.image} 
-            alt={mockPopupAnnouncement.title} 
+            src={announcement.image}
+            alt={announcement.title}
             className="w-full h-full object-cover mix-blend-overlay opacity-90"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-5">
@@ -63,10 +69,10 @@ export const PopupModal: React.FC<PopupModalProps> = ({ onNavigate }) => {
         {/* Modal Body */}
         <div className="p-6 space-y-4">
           <h3 className="font-display font-bold text-xl text-[#17356B] leading-snug">
-            {mockPopupAnnouncement.title}
+            {announcement.title}
           </h3>
           <p className="text-gray-600 text-sm leading-relaxed">
-            {mockPopupAnnouncement.description}
+            {announcement.description}
           </p>
           
           <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
@@ -74,7 +80,7 @@ export const PopupModal: React.FC<PopupModalProps> = ({ onNavigate }) => {
               onClick={handleCta}
               className="w-full sm:flex-1 bg-[#D9232C] hover:bg-[#b81b23] text-white font-bold py-3 px-4 rounded-xl text-sm transition shadow-md flex items-center justify-center gap-2"
             >
-              <span>{mockPopupAnnouncement.ctaText}</span>
+              <span>{announcement.ctaText}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
             <button 

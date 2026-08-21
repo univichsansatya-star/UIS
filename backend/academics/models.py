@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from config.image_validation import validate_accreditation_image, validate_faculty_image
 
 
 class Faculty(models.Model):
@@ -8,7 +9,11 @@ class Faculty(models.Model):
     slug = models.SlugField(unique=True, blank=True)
     description = models.TextField()
     dean_name = models.CharField(max_length=255)
-    image = models.ImageField(upload_to='faculty/')
+    image = models.ImageField(
+        upload_to='faculty/',
+        validators=[validate_faculty_image],
+        help_text='Wajib 800 x 500 px, JPG/PNG/WebP. Rasio 8:5.',
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -88,7 +93,11 @@ class Accreditation(models.Model):
     decree_number = models.CharField(max_length=255, help_text="No SK BAN-PT / LAM-PTKes")
     valid_until = models.DateField()
     content = models.TextField()
-    image = models.ImageField(upload_to='accreditation/')
+    image = models.ImageField(
+        upload_to='accreditation/',
+        validators=[validate_accreditation_image],
+        help_text='Wajib 1200 x 800 px, JPG/PNG/WebP. Rasio 3:2.',
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     

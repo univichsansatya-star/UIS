@@ -1,10 +1,30 @@
 from django.contrib import admin
+from django import forms
 from unfold.admin import ModelAdmin
+from config.image_forms import image_upload_field
+from config.image_validation import validate_accreditation_image, validate_faculty_image
 from .models import Faculty, StudyProgram, Accreditation
+
+
+class FacultyAdminForm(forms.ModelForm):
+    image = image_upload_field('Foto Fakultas', '800 x 500', '8:5', validate_faculty_image)
+
+    class Meta:
+        model = Faculty
+        fields = '__all__'
+
+
+class AccreditationAdminForm(forms.ModelForm):
+    image = image_upload_field('Dokumen Akreditasi', '1200 x 800', '3:2', validate_accreditation_image)
+
+    class Meta:
+        model = Accreditation
+        fields = '__all__'
 
 
 @admin.register(Faculty)
 class FacultyAdmin(ModelAdmin):
+    form = FacultyAdminForm
     list_display = ('name', 'dean_name', 'created_at')
     search_fields = ('name', 'dean_name')
     readonly_fields = ('slug', 'created_at', 'updated_at')
@@ -48,6 +68,7 @@ class StudyProgramAdmin(ModelAdmin):
 
 @admin.register(Accreditation)
 class AccreditationAdmin(ModelAdmin):
+    form = AccreditationAdminForm
     list_display = ('title', 'category', 'accreditation_grade', 'valid_until')
     list_filter = ('category', 'accreditation_grade', 'valid_until')
     search_fields = ('title', 'decree_number')

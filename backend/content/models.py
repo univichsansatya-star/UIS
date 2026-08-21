@@ -1,5 +1,6 @@
 from django.db import models
 from solo.models import SingletonModel
+from config.image_validation import validate_hero_image, validate_popup_image, validate_rector_photo
 
 
 class ContactInfo(SingletonModel):
@@ -45,7 +46,11 @@ class RectorGreeting(SingletonModel):
     """Singleton model for rector's greeting"""
     name = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
-    photo = models.ImageField(upload_to='rector/')
+    photo = models.ImageField(
+        upload_to='rector/',
+        validators=[validate_rector_photo],
+        help_text='Wajib 600 x 800 px, JPG/PNG/WebP. Foto portrait 3:4.',
+    )
     quote = models.TextField()
     full_message = models.JSONField(default=list, help_text="List of paragraphs")
     
@@ -60,7 +65,11 @@ class HeroSlide(models.Model):
     """Hero slider carousel items"""
     title = models.CharField(max_length=255)
     subtitle = models.CharField(max_length=255)
-    image = models.ImageField(upload_to='hero/')
+    image = models.ImageField(
+        upload_to='hero/',
+        validators=[validate_hero_image],
+        help_text='Wajib 1920 x 720 px, JPG/PNG/WebP. Rasio 8:3.',
+    )
     cta_text = models.CharField(max_length=100)
     cta_link = models.CharField(max_length=500)
     badge = models.CharField(max_length=100, blank=True, null=True)
@@ -76,7 +85,11 @@ class HeroSlide(models.Model):
 class PopupAnnouncement(models.Model):
     """Popup announcements for the website"""
     title = models.CharField(max_length=255)
-    image = models.ImageField(upload_to='popup/')
+    image = models.ImageField(
+        upload_to='popup/',
+        validators=[validate_popup_image],
+        help_text='Wajib 1200 x 800 px, JPG/PNG/WebP. Rasio 3:2.',
+    )
     description = models.TextField()
     cta_text = models.CharField(max_length=100)
     cta_link = models.CharField(max_length=500)
