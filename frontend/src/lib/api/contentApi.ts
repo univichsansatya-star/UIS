@@ -1,5 +1,14 @@
 import API_BASE_URL, { resolveMediaUrl } from './apiConfig';
-import { mockCampusStats, mockContactInfo, mockHeroSlides, mockPopupAnnouncement, mockRectorGreeting } from './mockData';
+import {
+  mockCampusProfiles,
+  mockCampusStats,
+  mockContactInfo,
+  mockHeroSlides,
+  mockPopupAnnouncement,
+  mockRectorGreeting,
+  mockVideoTour,
+  mockVisionMission,
+} from './mockData';
 
 async function getContent<T>(path: string, fallback: T): Promise<T> {
   try {
@@ -19,6 +28,9 @@ export const getContactInfo = () => getContent('contact-info/', mockContactInfo)
 export const getCampusStats = () => getContent('campus-stats/', mockCampusStats);
 export const getRectorGreeting = () => getContent('rector-greeting/', mockRectorGreeting);
 export const getHeroSlides = () => getContent('hero-slides/', mockHeroSlides);
+export const getVideoTour = () => getContent('video-tour/', mockVideoTour);
+export const getVisionMission = () => getContent('vision-mission/', mockVisionMission);
+export const getCampusProfiles = () => getContent('campus-profile/', mockCampusProfiles);
 export async function getPopupAnnouncement() {
   const popup = await getContent('popup-announcement/', null);
   if (!popup) return mockPopupAnnouncement;

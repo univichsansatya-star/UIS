@@ -1,3 +1,5 @@
+import re
+
 from django.db import models
 from solo.models import SingletonModel
 from config.image_validation import validate_hero_image, validate_popup_image, validate_rector_photo
@@ -101,3 +103,70 @@ class PopupAnnouncement(models.Model):
     
     def __str__(self):
         return self.title
+
+
+class CampusProfile(models.Model):
+    """Institutional profile sections"""
+    title = models.CharField(max_length=255)
+    slug = models.SlugField(unique=True)
+    content = models.TextField()
+    order = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self):
+        return self.title
+
+
+class VisionMission(SingletonModel):
+    """Vision and mission statement"""
+    vision = models.TextField()
+    missions = models.JSONField(default=list, help_text="List of mission point strings")
+
+    class Meta:
+        verbose_name_plural = "Vision Mission"
+
+    def __str__(self):
+        return "Vision and Mission"
+
+
+class VideoTour(SingletonModel):
+    """Video tour information"""
+    title = models.CharField(max_length=255)
+    youtube_embed_url = models.URLField()
+    description = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name_plural = "Video Tour"
+
+    def save(self, *args, **kwargs):
+        self.youtube_embed_url = self._normalize_youtube_url(self.youtube_embed_url)
+        super().save(*args, **kwargs)
+
+    @staticmethod
+    def _normalize_youtube_url(url: str) -> str:
+        patterns = [
+            r'(?:youtube\.com/watch\?v=|youtu\.be/|youtube\.com/embed/)([\w-]{11})',
+        ]
+        for pattern in patterns:
+            match = re.search(pattern, url)
+            if match:
+                return f'https://www.youtube.com/embed/{match.group(1)}'
+        return url
+
+    def __str__(self):
+        return self.title
+
+
+class RunningQuote(models.Model):
+    """Running text quotes for the ticker"""
+    text = models.CharField(max_length=300)
+    author = models.CharField(max_length=150, blank=True)
+    order = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self):
+        return self.text

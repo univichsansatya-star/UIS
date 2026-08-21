@@ -190,6 +190,27 @@ export interface CampusStats {
   accreditationGrade: string;
 }
 
+export interface VideoTour {
+  id: number;
+  title: string;
+  youtubeEmbedUrl: string;
+  description: string;
+}
+
+export interface VisionMission {
+  id: number;
+  vision: string;
+  missions: string[];
+}
+
+export interface CampusProfileSection {
+  id: number;
+  title: string;
+  slug: string;
+  content: string;
+  order: number;
+}
+
 export interface PopupAnnouncement {
   id: number;
   title: string;

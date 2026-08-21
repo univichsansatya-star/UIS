@@ -1,10 +1,15 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import ContactInfo, CampusStats, RectorGreeting, HeroSlide, PopupAnnouncement
+from .models import (
+    ContactInfo, CampusStats, RectorGreeting, HeroSlide, PopupAnnouncement,
+    CampusProfile, VisionMission, VideoTour, RunningQuote,
+)
 from .serializers import (
     ContactInfoSerializer, CampusStatsSerializer, RectorGreetingSerializer,
-    HeroSlideSerializer, PopupAnnouncementSerializer
+    HeroSlideSerializer, PopupAnnouncementSerializer,
+    CampusProfileSerializer, VisionMissionSerializer, VideoTourSerializer,
+    RunningQuoteSerializer,
 )
 
 
@@ -56,3 +61,37 @@ def popup_announcement(request):
         return Response(None)
     serializer = PopupAnnouncementSerializer(obj)
     return Response(serializer.data)
+
+
+class CampusProfileViewSet(viewsets.ReadOnlyModelViewSet):
+    """Campus profile sections viewset"""
+    queryset = CampusProfile.objects.all().order_by('order')
+    serializer_class = CampusProfileSerializer
+
+
+@api_view(['GET'])
+def vision_mission(request):
+    """Get vision and mission"""
+    try:
+        obj = VisionMission.objects.get()
+    except VisionMission.DoesNotExist:
+        return Response({'error': 'Vision mission not found'}, status=status.HTTP_404_NOT_FOUND)
+    serializer = VisionMissionSerializer(obj)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def video_tour(request):
+    """Get video tour"""
+    try:
+        obj = VideoTour.objects.get()
+    except VideoTour.DoesNotExist:
+        return Response({'error': 'Video tour not found'}, status=status.HTTP_404_NOT_FOUND)
+    serializer = VideoTourSerializer(obj)
+    return Response(serializer.data)
+
+
+class RunningQuoteViewSet(viewsets.ReadOnlyModelViewSet):
+    """Running quote ticker viewset"""
+    queryset = RunningQuote.objects.all().order_by('order')
+    serializer_class = RunningQuoteSerializer

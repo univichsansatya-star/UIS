@@ -35,40 +35,6 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, onNavigate }) => {
 
   return (
     <header className="sticky top-0 z-50 w-full transition-all duration-300">
-      {/* Top Bar - Contact & Operational info */}
-      <div className="bg-[#17356B] text-white text-xs py-2 px-4 sm:px-8 border-b border-white/10 hidden md:block">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-6">
-            <span className="flex items-center gap-1.5 text-gray-200 hover:text-white transition">
-              <Phone className="w-3.5 h-3.5 text-[#00ADF1]" />
-              <span>{mockContactInfo.phone1}</span>
-            </span>
-            <span className="flex items-center gap-1.5 text-gray-200 hover:text-white transition">
-              <Mail className="w-3.5 h-3.5 text-[#00ADF1]" />
-              <span>{mockContactInfo.email}</span>
-            </span>
-            <span className="flex items-center gap-1.5 text-gray-300">
-              <Calendar className="w-3.5 h-3.5 text-emerald-400" />
-              <span>PMB TA 2026/2027: Gelombang 1 S.d 30 Agustus 2026</span>
-            </span>
-          </div>
-          <div className="flex items-center gap-4 text-gray-300 font-mono-code text-[11px]">
-            <button onClick={() => handleNavClick('/tracer-study')} className="hover:text-[#00ADF1] transition">
-              Tracer Study
-            </button>
-            <span>|</span>
-            <button onClick={() => handleNavClick('/download')} className="hover:text-[#00ADF1] transition">
-              Unduh Berkas
-            </button>
-            <span>|</span>
-            <button onClick={() => handleNavClick('/akreditasi')} className="hover:text-[#00ADF1] transition flex items-center gap-1">
-              <ShieldCheck className="w-3 h-3 text-[#00ADF1]" />
-              Akreditasi
-            </button>
-          </div>
-        </div>
-      </div>
-
       {/* Main Navigation Bar */}
       <nav className={`w-full bg-white transition-all duration-300 ${isScrolled ? 'shadow-md py-3' : 'py-4 border-b border-gray-100'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-8 flex justify-between items-center">

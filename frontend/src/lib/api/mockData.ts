@@ -1,6 +1,6 @@
 // Mock data for development
 // Replace with real API calls in production
-import type {Faculty, StudyProgram} from '../../types';
+import type {CampusProfileSection, Faculty, StudyProgram, VideoTour, VisionMission} from '../../types';
 
 export const mockContactInfo = {
   email: 'info@universitasichsansatya.ac.id',
@@ -110,6 +110,25 @@ export const mockCampusStats = [
   { label: 'Dosen', value: 85, icon: '🎓' },
   { label: 'Tahun Berdiri', value: 2015, icon: '🏛️' },
 ];
+
+export const mockVideoTour: VideoTour = {
+  id: 1,
+  title: 'Video Tour Kampus UIS',
+  youtubeEmbedUrl: '',
+  description: 'Video profil kampus Universitas Ichsan Satya.',
+};
+
+export const mockVisionMission: VisionMission = {
+  id: 1,
+  vision: 'Menjadi perguruan tinggi unggul di bidang kesehatan dan teknologi yang berdaya saing global.',
+  missions: [
+    'Menyelenggarakan pendidikan berbasis ilmu pengetahuan, teknologi, dan karakter.',
+    'Mengembangkan penelitian dan inovasi untuk meningkatkan kualitas kesehatan dan masyarakat.',
+    'Memberdayakan masyarakat melalui pengabdian yang berdampak nyata.',
+  ],
+};
+
+export const mockCampusProfiles: CampusProfileSection[] = [];
 
 export const mockPopupAnnouncement = {
   isActive: false,

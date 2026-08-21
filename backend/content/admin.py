@@ -4,7 +4,10 @@ from unfold.admin import ModelAdmin
 from config.image_forms import image_upload_field
 from config.image_validation import validate_popup_image
 from config.image_validation import validate_hero_image, validate_rector_photo
-from .models import ContactInfo, CampusStats, RectorGreeting, HeroSlide, PopupAnnouncement
+from .models import (
+    ContactInfo, CampusStats, RectorGreeting, HeroSlide, PopupAnnouncement,
+    CampusProfile, VisionMission, VideoTour, RunningQuote,
+)
 
 
 class UnfoldSingletonModelAdmin(ModelAdmin):
@@ -70,6 +73,40 @@ class HeroSlideAdmin(ModelAdmin):
         }),
         ('Call to Action', {
             'fields': ('cta_text', 'cta_link')
+        }),
+    )
+
+
+@admin.register(CampusProfile)
+class CampusProfileAdmin(ModelAdmin):
+    list_display = ('title', 'order')
+    list_editable = ('order',)
+    ordering = ['order']
+    fieldsets = (
+        ('Profile Content', {
+            'fields': ('title', 'slug', 'content', 'order')
+        }),
+    )
+
+
+@admin.register(VisionMission)
+class VisionMissionAdmin(UnfoldSingletonModelAdmin):
+    pass
+
+
+@admin.register(VideoTour)
+class VideoTourAdmin(UnfoldSingletonModelAdmin):
+    pass
+
+
+@admin.register(RunningQuote)
+class RunningQuoteAdmin(ModelAdmin):
+    list_display = ('text', 'order')
+    list_editable = ('order',)
+    ordering = ['order']
+    fieldsets = (
+        ('Running Quote', {
+            'fields': ('text', 'author', 'order')
         }),
     )
 

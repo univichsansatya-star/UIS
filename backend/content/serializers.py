@@ -1,5 +1,8 @@
 from rest_framework import serializers
-from .models import ContactInfo, CampusStats, RectorGreeting, HeroSlide, PopupAnnouncement
+from .models import (
+    ContactInfo, CampusStats, RectorGreeting, HeroSlide, PopupAnnouncement,
+    CampusProfile, VisionMission, VideoTour, RunningQuote,
+)
 
 
 class ContactInfoSerializer(serializers.ModelSerializer):
@@ -47,3 +50,27 @@ class PopupAnnouncementSerializer(serializers.ModelSerializer):
     class Meta:
         model = PopupAnnouncement
         fields = ['id', 'title', 'image', 'description', 'cta_text', 'cta_link', 'is_active']
+
+
+class CampusProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CampusProfile
+        fields = ['id', 'title', 'slug', 'content', 'order']
+
+
+class VisionMissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VisionMission
+        fields = ['vision', 'missions']
+
+
+class VideoTourSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VideoTour
+        fields = ['title', 'youtube_embed_url', 'description']
+
+
+class RunningQuoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RunningQuote
+        fields = ['id', 'text', 'author', 'order']

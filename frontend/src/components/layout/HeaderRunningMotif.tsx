@@ -18,7 +18,7 @@ export const HeaderRunningMotif: React.FC<HeaderRunningMotifProps> = ({
           [{sectionNumber}]
         </span>
         <span className="w-1.5 h-1.5 rounded-full bg-[#17356B]"></span>
-        <span className="font-mono-code text-xs text-gray-500 font-medium tracking-wide">
+        <span className="font-mono-code text-xs text-gray-500 font-medium tracking-wide capitalize">
           {chapterTitle}
         </span>
       </div>
